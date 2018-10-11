@@ -1,0 +1,27 @@
+<div class="card m-auto cemeteryAddForm">
+  <div class="card-body">
+    <form [formGroup]="userAddForm" (ngSubmit)="addOwner($event)">
+      <div class="form-group row">
+        <label for="cemeteryName" class="col-sm-4 col-form-label">Cemetery Name</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control col-md-12 " id="cemeteryName" name="cemeteryName" placeholder="Cemetery Name" formControlName="cemeteryName">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="cemeteryLocation" class="col-sm-4 col-form-label ">Location</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control col-md-12 " id="cemeteryLocation" name="cemeteryLocation" placeholder="Location" formControlName="cemeteryLocation">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="cemeteryAdd" class="col-sm-4 col-form-label "> </label>
+
+        <div class="col-sm-8">
+          <button type="submit" class="btn btn-primary center-block auto" [disabled]="!userAddForm.valid"> Add </button>
+        </div>
+      </div>
+    </form>
+    <div class="alert text-center" [ngClass]="{'alert-success' : successMessage.status == true, 'alert-danger' : successMessage.status == false}"
+      style="text-align: center;" *ngIf="successMessage.message" [innerHtml]="successMessage.message"></div>
+  </div>
+</div>

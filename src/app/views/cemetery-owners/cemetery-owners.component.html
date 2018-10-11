@@ -1,0 +1,52 @@
+<div class="text-right">
+  <a routerLink="/cemetery-owner-add">
+    Add Cemetery User
+    <i class="material-icons md-36 align-middle mb-1 text-primary orange">add_circle_outline</i>
+  </a>
+</div>
+<div class="card">
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr class="bg-fade">
+          <th>S. No.</th>
+          <th> Cemetery User</th>
+          <th> Assigned Cemetery</th>
+          <th> Status </th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor=" let u of user; let i = index">
+          <td class="align-middle">
+            {{ i+1 }}
+          </td>
+          <td class="align-middle">
+            <div>
+              {{u.first_name +' '+ u.last_name}}
+            </div>
+          </td>
+          <td class="align-middle">
+            <div>
+              {{ u.name }}
+            </div>
+          </td>
+          <td class="align-middle">
+            <input type="button" class='btn btn-success' (click)="actdac({userid:u.id, act:1})" name="active" value="Active" *ngIf="u.active_deactive==1">
+            <input type="button" class='btn btn-danger' (click)="actdac({userid:u.id,act:0})" name="deactive" value="Deactive" *ngIf="u.active_deactive==0">
+          </td>
+          <td>
+            <a (click)="getupdata(u.id)" href="javascript:void(0)" title="Edit">
+              <i class="material-icons md-18 align-middle mb-1 text-primary green">border_color</i>
+            </a>
+            <a (click)="userDelete(u.id)" href="javascript:void(0)" title="Delete" confirm="Are you sure?">
+              <i class="material-icons md-18 align-middle mb-1 text-primary red">delete</i>
+            </a>
+
+        </tr>
+      </tbody>
+    </table>
+    <div class="alert text-center" [ngClass]="{'alert-success' : successMessage.status == true, 'alert-danger' : successMessage.status == false}"
+      style="text-align: center;" *ngIf="successMessage.message" [innerHtml]="successMessage.message"></div>
+  </div>
+</div>

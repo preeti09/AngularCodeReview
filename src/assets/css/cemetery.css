@@ -1,0 +1,33 @@
+.cemeteryAddForm {
+    width: 60%;
+    min-width: 500px;
+    white-space: nowrap
+}
+.form-control {
+    /* width: 55% !important; */
+    font-size: 13px !important;
+}
+.p-top-30 {
+padding-top: 75px;    
+}
+.p-20 {
+    height: 40px;
+    padding: 10px;
+    align-items: center;
+}
+.custom-file-label {
+    height: 40px !important;
+    padding: 10px !important;
+    align-items: center;
+}
+ .custom-file-label::after {
+    height: auto;
+    line-height: 2.1;
+}
+/***************** cemetery management tool *********************/
+
+@media (max-width: 480px) {
+    .cemeteryAddForm {
+         width: 297px;
+}
+}

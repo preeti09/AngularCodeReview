@@ -1,0 +1,3102 @@
+<!-- <section class="loading-overlay">
+  <div class="Loading-Page">
+      <h2 class="loader">Loading</h2>
+  </div>
+</section> -->
+
+<div class="boxed">
+  <header id="header" class="header clearfix">
+    <nav id="mainnav" class="navbar navbar-expand-md navbar-dark">
+      <div id="logo" class="logo float-left">
+        <a href="http://www.ezygeospatial.com.au/chronicle/">
+          <img src="../../../../assets/images/logo.png" alt="image">
+        </a>
+      </div>
+      <button class="navbar-toggler btn-menu" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav ml-auto">
+          <li *ngIf="userforName;">
+            <a href=""> Welcome: {{ userName }} </a>
+          </li>
+          <li *ngIf="logoutButton;else logout">
+            <a data-toggle="modal" href="#popup_login">
+              <i class="fa fa-sign-in"></i> Login</a>
+          </li>
+          <ng-template #logout>
+            <li>
+              <a href="" (click)="logoutSession()">
+                <i class="fa fa-sign-out"></i> Logout</a>
+            </li>
+          </ng-template>
+
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <!-- /.header -->
+  <div style="height: 70px; display: none;"></div>
+  <!-- /.header -->
+
+  <section class="main-content page-listing-full">
+    <div class="container">
+      <div class="gray_bg width-custom_800">
+        <div class="Main-title_bg col">
+          <div>
+            <h2 class="text-center">Plot details</h2>
+          </div>
+        </div>
+        <a href="/show-cemetery?id={{cemid}}&location={{param2}}" class="plotFormClose">&times;</a>
+        <div class="col-lg-12">
+          <form action="" method="post" enctype='multipart/form-data' #plotsUpdateForm="ngForm" novalidate>
+            <div class="row" *ngIf="gravedata !== undefined">
+              <div class="col-md-6">
+                <label for="plotId"> Plot id </label>
+                <input type="text" #plot_id="ngModel" [(ngModel)]="gravedata.plot_id" class="form-control form-control-sm bg-white" name="plotId"
+                  id="plotId" disabled="">
+              </div>
+
+              <div class="col-md-6">
+                <div class="">
+                  <label for="cemetry_id" class=""> Cemetery </label>
+                  <input type="text" class="form-control  bg-white" [(ngModel)]="gravedata.cemetery_id" name="cemetery" id="cemetery" disabled="">
+                </div>
+              </div>
+            </div>
+            <div class="row" *ngIf="gravedata !== undefined">
+              <div class="col-md-6">
+                <label for="section"> Section </label>
+                <input type="text" [(ngModel)]="gravedata.section" class="form-control form-control-sm bg-white" name="section" id="section"
+                  disabled="">
+              </div>
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="row"> Row </label>
+                    <input type="text" [(ngModel)]="gravedata.row" class="form-control form-control-sm bg-white" name="row" id="row" disabled="">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="plotNumber"> Plot number </label>
+                    <input type="text" [(ngModel)]="gravedata.plot_no" class="form-control form-control-sm bg-white" name="plotNumber" id="plotNumber"
+                      disabled="">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="mb-30">
+            <div class="row">
+              <div class="col-md-6" *ngIf="gravedata !== undefined">
+                <label for="status"> Status </label>
+                <select class="form-control form-control-sm" name="status" [ngClass]="{'editableInputField': isPlotFormEditable }" id="status"
+                  [disabled]="!isPlotFormEditable" [(ngModel)]="gravedata.status" required>
+                  <option disabled> Select </option>
+                  <option *ngFor="let c of status" value="{{c.id}}">{{c.name}}</option>
+                </select>
+                <div class="alert alert-danger" *ngIf="status.invalid">This field is required</div>
+              </div>
+              <div class="col-md-6">
+                <div class="row  mx-0" *ngIf="gravedata !== undefined">
+                  <label for="capacity"> Capacity </label>
+                  <input type="text" #capacity="ngModel" [(ngModel)]="gravedata.capacity" [ngClass]="{'editableInputField': isPlotFormEditable }"
+                    class="form-control form-control-sm bg-white" pattern="^(0|[1-9][0-9]*)$" name="capacity" id="capacity"
+                    [disabled]="!isPlotFormEditable" required>
+                  <div class="alert alert-danger" *ngIf="capacity.invalid">This field is required and only be numeric</div>
+                </div>
+              </div>
+            </div>
+            <hr class="mb-30">
+
+            <!-- Right Of INterment -->
+
+            <div class="" *ngIf="RightOfIntermentData !== undefined && RightOfIntermentData.id !== undefined; else newright">
+              <div class="" *ngIf="gravedata !== undefined && gravedata.status == 2 || gravedata !== undefined && gravedata.status == 3">
+                <div class="row">
+                  <div class="col-md-12">
+                    <h2 class="text-center subtitle">Right of interment</h2>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="rightOfInterment"> Right of interment </label>
+                    <input type="text" class="form-control form-control-sm bg-white" value="{{RightOfIntermentData.applicant_data.surname}} {{RightOfIntermentData.applicant_data.first_name}}"
+                      name="rightOfInterment" id="rightOfInterment" Placeholder='Name/"None"' disabled>
+                  </div>
+
+                  <div class="col-md-6 flex-align_center">
+                    <button type="button" class="flat-button" data-toggle="modal" data-target="#RightOfInterment" data-backdrop="static" data-keyboard="false"
+                      (click)="getRightOfDataById(RightOfIntermentData,false)">
+                      <i class="fa fa-eye"></i> View </button>
+
+                    <button type="button" data-toggle="modal" data-target="#RightOfInterment" data-backdrop="static" data-keyboard="false" (click)="getRightOfDataById(RightOfIntermentData,true)"
+                      class="flat-button">
+                      <i class="fa fa-pencil"></i> Edit </button>
+                  </div>
+                </div>
+                <div class="" *ngIf="RightOfIntermentData !== undefined && gravedata !== undefined && RightOfIntermentData !== null && gravedata.status == 2 ">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="" id='datetimepicker1'>
+                        <label for="application_date"> Application date </label>
+                        <div class="input-group">
+                          <input type='text' [(ngModel)]="RightOfIntermentData.application_date" name="application_date" id="application_date" autocomplete="off"
+                            class="form-control bg-white" disabled>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="feePaidRight"> Fee paid </label>
+                      <div class="form-control-sm">
+                        <label *ngIf="RightOfIntermentData.fee_paid == 1;else werr" for="feePaidRight" class="radio-inline">
+                          <input type="radio" name="feePaidRight" id="feePaid" checked disabled> Yes
+                        </label>
+                        <ng-template #werr>
+                          <label for="feePaid" class="radio-inline">
+                            <input type="radio" name="feePaid" id="feePaid" disabled> Yes
+                          </label>
+                        </ng-template>
+
+                        <label *ngIf="RightOfIntermentData.fee_paid == 2;else wer1r" for="feePaid" class="radio-inline">
+                          <input type="radio" name="feePaid" id="feePaid" checked disabled> No
+                        </label>
+                        <ng-template #wer1r>
+                          <label for="feePaid" class="radio-inline">
+                            <input type="radio" name="feePaid" id="feePaid" disabled> No
+                          </label>
+                        </ng-template>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label for="termOfRightforrightInter"> Term of right </label>
+                      <select class="form-control form-control-sm" name="termOfRightforrightInter" id="termOfRightforrightInter" [(ngModel)]="RightOfIntermentData.term_of_right"
+                        disabled>
+                        <option value="1"> Perpetual </option>
+                        <option value="2"> Reserved / 25 years </option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="fee_charged">Fee charged ($) </label>
+                      <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="RightOfIntermentData.fee_charged" name="fee_charged"
+                        id="fee_charged" disabled>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <ng-template #newright>
+              <h2 class="subtitle text-center" *ngIf="gravedata !== undefined && gravedata.status == 2 || gravedata !== undefined && gravedata.status == 3">Right of interment</h2>
+              <div class="row" *ngIf="gravedata !== undefined && gravedata.status == 2 || gravedata !== undefined && gravedata.status == 3">
+                <div class="col-md-6">
+                  <label for="rightOfInterment"> Right of interment </label>
+                  <input type="text" class="form-control form-control-sm bg-white" name="rightOfInterment" id="rightOfInterment" Placeholder='Add New Right of Interment'
+                    disabled>
+                </div>
+                <div class="col-md-6 flex-align_center">
+                  <button type="button" class="flat-button" data-keyboard="false" data-backdrop="static" data-toggle="modal" (click)="viewrightOfIntermentData(true)"
+                    data-target="#NewRightOfInterment" [disabled]="isPlotFormEditable">
+                    <i class="fa fa-plus"></i> New right of interment </button>
+                </div>
+              </div>
+            </ng-template>
+
+            <div *ngIf="gravedata !== undefined && RightOfIntermentData !== undefined && gravedata.status == 3 && RightOfIntermentData !== ''">
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="" id='datetimepicker1'>
+                    <label for="application_date"> Application date </label>
+                    <div class="input-group">
+                      <input type='text' [(ngModel)]="RightOfIntermentData.application_date" name="application_date" id="application_date" class="form-control bg-white"
+                        disabled>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="feePaidRight"> Fee paid </label>
+                  <div class="form-control-sm">
+                    <label *ngIf="RightOfIntermentData.fee_paid == 1;else werr" for="feePaidRight" class="radio-inline">
+                      <input type="radio" name="feePaidRight" id="feePaid" checked disabled> Yes
+                    </label>
+                    <ng-template #werr>
+                      <label for="feePaid" class="radio-inline">
+                        <input type="radio" name="feePaid" id="feePaid" disabled> Yes
+                      </label>
+                    </ng-template>
+
+                    <label *ngIf="RightOfIntermentData.fee_paid == 2;else wer1r" for="feePaid" class="radio-inline">
+                      <input type="radio" name="feePaid" id="feePaid" checked disabled> No
+                    </label>
+                    <ng-template #wer1r>
+                      <label for="feePaid" class="radio-inline">
+                        <input type="radio" name="feePaid" id="feePaid" disabled> No
+                      </label>
+                    </ng-template>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <label for="termOfRightforrightInter"> Term of right </label>
+                  <select class="form-control form-control-sm" name="termOfRightforrightInter" id="termOfRightforrightInter" [(ngModel)]="RightOfIntermentData.term_of_right"
+                    disabled>
+                    <option value="1"> Perpetual </option>
+                    <option value="2"> Reserved / 25 years </option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="fee_charged">Fee charged ($) </label>
+                  <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="RightOfIntermentData.fee_charged" name="fee_charged"
+                    id="fee_charged" disabled>
+                </div>
+              </div>
+            </div>
+
+            <!-- End Right of Interment -->
+            <hr class="mb-30">
+            <div class="row" *ngIf="gravedata !== undefined && gravedata.status == 3">
+              <div class="col-md-12">
+                <h2 class="text-center subtitle">Interment(s) </h2>
+                <button type="button" class="flat-button pull-right" data-keyboard="false" data-backdrop="static" data-toggle="modal" (click)="getBussiness(gravedata.cemetery_id,true)"
+                  data-target="#AddNewInterment" [disabled]="isPlotFormEditable">
+                  <i class="fa fa-plus"></i> New interment</button>
+              </div>
+            </div>
+            <div *ngIf="gravedata !== undefined && gravedata.status == 3 || gravedata !== undefined && gravedata.status == 2">
+
+              <div id="interwel" class="carousel slide custom-indi" data-wrap="false" data-interval="false" data-ride="carousel" *ngIf="gravedata !== undefined && gravedata.status == 3">
+
+                <!-- The slideshow -->
+                <div class="carousel-inner">
+
+                  <ng-container *ngFor="let per of interment; let i = index;">
+                    <div class="carousel-item" [ngClass]="{'active': param4 == per.personData.id || ((param4 == undefined || param4 == '') && i == 0)}">
+                      <div class="row" *ngIf="gravedata !== undefined && gravedata.status == 3">
+                        <div class="col-md-6">
+                          <label for="burial"> Burial(s) </label>
+                          <!-- <input type="text" value="{{per.id}}" class="for -control form-control-sm bg-white" id="burial" placeholder="1/2"> -->
+                          <input type="text" class="form-control form-control-sm bg-white" id="burial" placeholder="{{i + 1}}/{{interment.length}}"
+                            name="burial" disabled>
+                        </div>
+                      </div>
+
+
+                      <div *ngIf="gravedata !== undefined && gravedata.status == 3">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <label for="burial"> Interment </label>
+                            <input type="text" class="form-control form-control-sm bg-white" value="{{per.personData.surname}} {{per.personData.first_name}}"
+                              name="burial" id="burial" placeholder="Person Name / None" disabled>
+                          </div>
+                          <div class="col-md-6 flex-align_center">
+                            <button type="button" class="flat-button" data-keyboard="false" data-backdrop="static" data-toggle="modal" data-target="#ViewInterment"
+                              (click)="getIntermentDataById(per,false)">
+                              <i class="fa fa-eye"></i> View </button>
+                            <!-- <button type="button" class="flat-button" data-keyboard="false" data-backdrop="static" data-toggle="modal"  data-target="#ViewInterment" (click)="getIntermentDataById(per,true)"><i class="fa fa-pencil"></i> Edit </button> -->
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <label for="type"> Type </label>
+                            <!-- <input type="text" class="form-control form-control-sm bg-white" value="{{per.interment_type}}" name="type" id="type" placeholder="Interment Type" disabled> -->
+                            <select class="form-control form-control-sm" [(ngModel)]="per.interment_type" name="type" id="type" disabled>
+                              <option value="1"> Burial</option>
+                              <option value="2"> Cremation </option>
+                            </select>
+
+                          </div>
+                          <div class="col-md-6">
+                            <label for="gender"> Gender </label>
+                            <!-- <input type="text" class="form-control form-control-sm bg-white" value="{{per.personData.gender}}"  name="gender" id="gender" placeholder="Gender" disabled> -->
+                            <select class="form-control form-control-sm" [(ngModel)]="per.personData.gender" name="gender" Placeholder="Gender" id="gender"
+                              disabled>
+                              <option value="" disabled selected> Select </option>
+                              <option value="1">Male</option>
+                              <option value="2">Female</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="row ">
+                          <div class="col-md-6">
+                            <div class="" id=''>
+                              <label for="intermentDate"> Date of interment </label>
+                              <div class="input-group date">
+                                <input type='text' class="form-control bg-white" value="{{per.interment_date}}" name="intermentDate" id="intermentDate" disabled
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="col-md-6 ">
+                            <div class="">
+                              <label for="dateOfBirth"> Date of birth </label>
+                              <div class="input-group" id='datetimepicker1'>
+                                <input type='text' class="form-control bg-white" value="{{per.personData.dob}}" name="burial" name="dateOfBirth" id="dateOfBirth"
+                                  disabled />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="" id='datetimepicker1'>
+                              <label for="dateOfDeath"> Date of death </label>
+                              <div class="input-group">
+                                <input type='text' class="form-control bg-white" value="{{per.personData.dod}}" name="burial" name="dateOfDeath" id="dateOfDeath"
+                                  disabled />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <!-- Left and right controls -->
+                <div class="text-center" *ngIf="interment.length > 1">
+                  <a class="carousel-control-prev" href="#interwel" data-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                  </a>
+                  <a class="carousel-control-next" href="#interwel" data-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                  </a>
+                </div>
+              </div>
+
+              <hr class="mb-30">
+              <div class="row" *ngIf="gravedata !== undefined">
+                <div class="col-lg-12">
+                  <label for="headStone"> Headstone inscription </label>
+                  <input type='text' class="form-control bg-white" [(ngModel)]="gravedata.headstone" name="headstone" id="headstone" [disabled]="!isPlotFormEditable"
+                    [ngClass]="{'editableInputField': isPlotFormEditable }" placeholder="Headstone inscription">
+                </div>
+              </div>
+              <br>
+
+              <div class="row " *ngIf="gravedata !== undefined">
+                <div class="col-md-12">
+                  <label for="headStonePhoto" class="  p-0"> Headstone photo </label>
+                </div>
+                <div class="col-lg-12">
+                  <div class="mb-30 mt-30">
+                    <div class="form-group organiser-wrapper">
+                      <div class="">
+                        <div class="banner_photo">
+                          <!-- <div id="targetLayer3" class="organiser_photo">
+                            <img onclick="showSource();" class="icon-choose-image" [src]="imageUrl">
+                          </div> -->
+                          <div id="targetLayer3" class="organiser_photo">
+                            <img class="icon-choose-image" *ngIf="filetype == 'png' || filetype == 'jpg' || filetype == 'jpeg'" [src]="imageUrl">
+                            <iframe *ngIf="filetype == 'pdf' || filetype == 'txt'" [src]="imageUrl" style="width:100%; height:300px;" frameborder="0"></iframe>
+                          </div>
+                          <div id='loader' *ngIf="loaderImg">
+                            <img src='../../../../assets/images/loader1.gif' alt='loader' />
+                          </div>
+                        </div>
+                      </div>
+                      <input type="hidden" name="profile_image" id="profile_image3" value="" class="form-control image-preview-filename">
+                      <div class="btn-browser">
+                        <input type="text" class="form-control image-preview-filename sm-input bg-white d-none" disabled="disabled">
+                        <div class="flat-button image-preview-input">
+                          <span class="fa fa-folder-open font-grey"></span>
+                          <span class="image-preview-input-title font-grey"> Upload image </span>
+                          <input type="file" (change)="handleFileInput($event.target.files,'gravesite','')" accept="image/png, image/jpeg, image/gif"
+                            name="profile_file" id="profile_file">
+                          <!--<p id="demo"></p>-->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="alert alert-danger" *ngIf="fileerr">Please select file !</div>
+                <div class="col-xs-12" *ngIf="gravedata.headstone_image !== ''">
+                  <div class="flat-button image-preview-input pull-right mt-30">
+                    <span class="image-preview-input-title font-grey">
+                      <a href="{{gravedata.headstone_image}}" target="_blank">
+                        <i class="fa fa-download" aria-hidden="true"></i> Download Image</a>
+                    </span>
+                  </div>
+                </div>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 pt-30 flex-align_center pb-30 ">
+                <button type="button" class="flat-button" (click)="isPlotFormEditable = true;" *ngIf="!isPlotFormEditable">
+                  <i class="fa fa-pencil"></i> Edit</button>
+                <button type="button" class="flat-button" (click)="updatePlotData()" *ngIf="isPlotFormEditable" [disabled]="plotsUpdateForm.invalid">Save</button>
+                <button type="button" class="flat-button dismis" *ngIf="isPlotFormEditable" (click)="alert()">Cancel</button>
+                <a style="margin-left: 12px;" href="/show-cemetery?id={{cemid}}&location={{param2}}" *ngIf="!isPlotFormEditable">
+                  <button type="button" class="flat-button">Return to map</button>
+                </a>
+                <!-- SUCCESS MESSAGE AFTER ACTION -->
+                <div class="alert" [ngClass]="{'alert-success' : successMessage.status == 200, 'alert-danger' : successMessage.status == 500}"
+                  style="text-align: center;" *ngIf="successMessage.message" [innerHtml]="successMessage.message"></div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <!-- /.col-lg-12 -->
+      </div>
+      <!-- /.container -->
+    </div>
+  </section>
+
+  <footer class="footer footer-widgets">
+
+    <div class="container">
+      <div class="bottom">
+        <div class="row">
+          <div class="col-md-12 col-sm-12">
+            <div class="copyright">
+              <p>Copyright © 2018. Australia-Cemetery. All Rights Reserved.
+              </p>
+            </div>
+          </div>
+          <!-- /.col-md-12 -->
+
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="modal fade" id="RightOfInterment">
+    <div class="modal-dialog modal-lg title-modal">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <div class="Main-title_bg col">
+            <div class="col-xs-12">
+              <h2 class="text-center">Right of interment</h2>
+            </div>
+          </div>
+          <button type="button" *ngIf="isRightOfIntermentEditable;else rightPer" class="close dismis" (click)="alert()">&times;</button>
+          <ng-template #rightPer>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </ng-template>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="gray_bg width-custom_800">
+
+            <div class="col-lg-12">
+              <form action="" method="post" #RightOfIntermentForm="ngForm">
+                <div class="row " *ngIf="gravedata !== undefined">
+                  <div class="col-md-6">
+                    <label for="plotId"> Plot id </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.plot_id" name="plotId" id="plotId"
+                      disabled="">
+                  </div>
+                  <div class="col-md-6">
+                    <div class="">
+                      <label for="cemetry_id" class=""> Cemetery </label>
+                      <input type="text" class="form-control  bg-white" [(ngModel)]="gravedata.cemetery_id" name="cemetery" id="cemetery" disabled="">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="gravedata !== undefined">
+                  <div class="col-md-6">
+                    <label for="section"> Section </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.section" name="section" id="section"
+                      disabled="">
+                  </div>
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <label for="row"> Row </label>
+                        <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.row" name="row" id="row" disabled="">
+                      </div>
+                      <div class="col-md-6">
+                        <label for="plotNumber"> Plot number </label>
+                        <input type="text" [(ngModel)]="gravedata.plot_no" class="form-control form-control-sm bg-white" name="plotNumber" id="plotNumber"
+                          disabled="">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <hr class="mb-30">
+                <h3 class="subtitle text-center">Applicant</h3>
+
+                <div class="row" *ngIf="right_applicant_data !== null && right_applicant_data !== undefined ">
+                  <div class="col-md-6">
+                    <label for="applicant"> Applicant </label>
+                    <input type="text" class="form-control form-control-sm bg-white" value="{{right_applicant_data.surname}} {{right_applicant_data.first_name}}"
+                      name="applicant" id="applicant" Placeholder='Applicant' disabled="">
+                  </div>
+                  <div class="col-md-6 flex-align_center">
+                    <button type="button" class="flat-button" data-keyboard="false" data-backdrop="static" data-toggle="modal" (click)="getPersonDataForView(right_applicant_data.person_id,false)"
+                      data-target="#NewPerson">
+                      <i class="fa fa-eye"></i> View </button>
+                    <button type="button" class="flat-button" data-keyboard="false" data-backdrop="static" data-toggle="modal" (click)="getPersonDataForView(right_applicant_data.person_id,true)"
+                      data-target="#NewPerson">
+                      <i class="fa fa-pencil"></i> Edit </button>
+                    <!-- <button type="button" class="flat-button">New </button> -->
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="right_applicant_data !== null && right_applicant_data !== undefined ">
+                  <div class="col-md-12">
+                    <div class="">
+                      <label for="address"> Address </label>
+                      <input type="text" value="{{right_applicant_data.pri_street}}, {{right_applicant_data.pri_suburb}}, {{right_applicant_data.pri_state}}"
+                        class="form-control form-control-sm bg-white" name="address" id="address" disabled="">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="right_applicant_data !== undefined">
+                  <div class="col-md-6">
+                    <label for="phone_home"> Phone (home) </label>
+                    <input type="tel" class="form-control form-control-sm bg-white" value="{{right_applicant_data.phone_home}}" name="phone_home"
+                      id="phone_home" disabled="">
+                  </div>
+                  <div class="col-md-6">
+                    <div class="">
+                      <label for="phone_mobile"> Phone (mobile) </label>
+                      <input type="tel" class="form-control form-control-sm bg-white" value="{{right_applicant_data.phone_mobile}}" name="phone_mobile"
+                        id="phone_mobile" disabled="">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="right_applicant_data !== undefined">
+                  <div class="col-md-6">
+                    <label for="email1">Email </label>
+                    <input type="email" class="form-control form-control-sm bg-white" value="{{right_applicant_data.email1}}" name="email1" id="email1"
+                      disabled="">
+                  </div>
+                </div>
+
+                <hr class="mb-30">
+                <h3 class="subtitle text-center">Right holders</h3>
+                <div class="row">
+                  <div class="col-md-12">
+                    <button type="button" class="flat-button pull-left mb-20" data-keyboard="false" data-backdrop="static" data-toggle="modal"
+                      data-target="#addNewPerson" (click)="forRid(right_inter.id,right_inter.cemetery_id)">
+                      <i class="fa fa-plus"></i> Add rights holder </button>
+                  </div>
+                </div>
+
+
+                <div class="slider">
+                  <div class="slides">
+                    <div *ngFor="let holder of right_holders; let i = index" class="width-100">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label for="NumberofRightHolders"> Number of right holders </label>
+                          <input type="text" class="form-control form-control-sm bg-white" placeholder="{{i + 1}}/{{right_holders.length}}" name="NumberofRightHolders"
+                            id="NumberofRightHolders" disabled>
+                        </div>
+                      </div>
+
+                      <!-- <div class="row">
+                          <div class="col-md-6">
+                            <label for="burial"> Right holder  </label>
+                            <input type="text" class="form-control form-control-sm bg-white" name="burial" id="burial" placeholder="1/2">
+                          </div>
+                          <div class="col-md-6 flex-align_center flex-remove">
+                            <div class="flat-button image-preview-input">
+                              <span class="fa fa-folder-open font-grey"></span>
+                              <span class="image-preview-input-title font-grey" > Browse File </span>
+                              <input type="file"   name="burial" id="" class="browseFile  get_title"  >
+                            </div>
+                          </div>
+                        </div> -->
+
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label for="holderPerson"> Rights holder </label>
+                          <input type="text" class="form-control form-control-sm bg-white" name="holderPerson" id="holderPerson" value="{{holder.surname}} {{holder.first_name}}"
+                            Placeholder='Name (Person_ID)' disabled>
+                        </div>
+                        <div class="col-md-6 flex-align_center">
+                          <button type="button" class="flat-button" data-keyboard="false" data-backdrop="static" (click)="getPersonDataForView(holder.person_id,false)"
+                            data-toggle="modal" data-target="#NewPerson">
+                            <i class="fa fa-eye"></i> View </button>
+                          <button type="button" class="flat-button" data-keyboard="false" data-backdrop="static" (click)="getPersonDataForView(holder.person_id,true)"
+                            data-toggle="modal" data-target="#NewPerson">
+                            <i class="fa fa-pencil"></i> Edit </button>
+                          <!-- <button type="button" class="flat-button">New </button> -->
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="">
+                            <label for="termOfRight"> Address </label>
+                            <input type="text" value="{{holder.pri_street}}, {{holder.pri_suburb}}, {{holder.pri_state}}" class="form-control form-control-sm bg-white"
+                              name="termOfRight" id="termOfRight" disabled>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label for="phone_home"> Phone (home) </label>
+                          <input type="tel" value="{{holder.phone_home}}" class="form-control form-control-sm bg-white" name="phone_home" id="phone_home"
+                            disabled>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="">
+                            <label for="phone_mobile"> Phone (mobile) </label>
+                            <input type="tel" value="{{holder.phone_mobile}}" class="form-control form-control-sm bg-white" name="phone_mobile" id="phone_mobile"
+                              disabled>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label for="email">Email </label>
+                          <input type="email" value="{{holder.email1}}" class="form-control form-control-sm bg-white" name="email" id="email" disabled>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <hr class="mb-30">
+                <div class="row">
+                  <div class="col-md-6" *ngIf="right_inter !== undefined ">
+                    <div class="" id='datetimepicker1'>
+                      <label for="application_date"> Application date </label>
+                      <div class="input-group">
+                        <input type='text' #application_date="ngModel" class="form-control bg-white date" [ngClass]="{'editableInputField': isRightOfIntermentEditable }"
+                          [(ngModel)]="right_inter.application_date" name="application_date" id="application_date" [disabled]="!isRightOfIntermentEditable"
+                          bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass:'theme-default' }" autocomplete="off"
+                        />
+                        <div class="alert alert-danger" *ngIf="application_date.invalid">This field is required and must be valid date</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6" *ngIf="right_inter !== undefined">
+                    <label for="rightType"> Right type </label>
+                    <select class="form-control form-control-sm" [ngClass]="{'editableInputField': isRightOfIntermentEditable }" #rightType="ngModel"
+                      [(ngModel)]="right_inter.right_type" name="rightType" id="rightType" [disabled]="!isRightOfIntermentEditable"
+                      required>
+                      <option value="1"> Burial</option>
+                      <option value="2"> Cremation </option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="rightType.invalid">This field is required</div>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="right_inter !== undefined">
+                  <div class="col-md-6">
+                    <label for="termOfRightforrightInter"> Term of right </label>
+                    <select class="form-control form-control-sm" #termOfRightforrightInter="ngModel" name="termOfRightforrightInter" id="termOfRightforrightInter"
+                      [(ngModel)]="right_inter.term_of_right" [disabled]="!isRightOfIntermentEditable" [ngClass]="{'editableInputField': isRightOfIntermentEditable }"
+                      required>
+                      <option value="1"> Perpetual </option>
+                      <option value="2"> Reserved / 25 years </option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="termOfRightforrightInter.invalid">This field is required</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="fee_charged">Fee charged ($) </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isRightOfIntermentEditable }"
+                      #fee_charged="ngModel" [(ngModel)]="right_inter.fee_charged" name="fee_charged" id="fee_charged" [disabled]="!isRightOfIntermentEditable"
+                      required>
+                    <div class="alert alert-danger" *ngIf="fee_charged.invalid">This field is required</div>
+                  </div>
+                </div>
+
+                <div class="row">
+
+                  <div class="col-md-6" *ngIf="right_inter !== undefined">
+                    <label for="feePaidRight"> Fee paid</label>
+                    <div class="form-control-sm">
+                      <label *ngIf="right_inter.fee_paid == 1;else wer" for="feePaidRight" class="radio-inline">
+                        <input type="radio" name="feePaidRight" [(ngModel)]="right_inter.fee_paid" [value]="1" id="feePaidRight" [disabled]="!isRightOfIntermentEditable"
+                          checked> Yes
+                      </label>
+                      <ng-template #wer>
+                        <label for="feePaidRight" class="radio-inline">
+                          <input type="radio" name="feePaidRight" [(ngModel)]="right_inter.fee_paid" id="feePaidRight" [value]="1" [disabled]="!isRightOfIntermentEditable"> Yes
+                        </label>
+                      </ng-template>
+
+                      <label *ngIf="right_inter.fee_paid == 2;else wer1" for="feePaidRight" class="radio-inline">
+                        <input type="radio" name="feePaidRight" [(ngModel)]="right_inter.fee_paid" id="feePaidRight" [value]="2" [disabled]="!isRightOfIntermentEditable"
+                          checked> No
+                      </label>
+                      <ng-template #wer1>
+                        <label for="feePaidRight" class="radio-inline">
+                          <input type="radio" name="feePaidRight" [(ngModel)]="right_inter.fee_paid" id="feePaidRight" [value]="2" [disabled]="!isRightOfIntermentEditable"> No
+                        </label>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+
+                <hr class="mb-30">
+
+                <div class="row " *ngIf="right_inter !== undefined">
+                  <div class="col-xs-12">
+                    <label for="headStonePhoto" class="  p-0"> Scanned application </label>
+                  </div>
+                  <div class="col-lg-12">
+                    <div class="mb-30 mt-30">
+                      <div class="form-group organiser-wrapper">
+                        <div class="">
+                          <div class="banner_photo">
+                            <!-- <div id="targetLayer3" class="organiser_photo">
+                              <img onclick="showSource();" class="icon-choose-image" [src]="imageUrl">
+                            </div> -->
+
+                            <div id="targetLayer3" class="organiser_photo">
+                            <img class="icon-choose-image" *ngIf="filetype == 'png' || filetype == 'jpg' || filetype == 'jpeg'" [src]="right_inter.scanned_application">
+                            <iframe *ngIf="filetype == 'pdf' || filetype == 'txt'" [src]="right_inter.scanned_application" style="width:100%; height:300px;" frameborder="0"></iframe>
+                          </div>
+
+                            <!-- <div id="targetLayer3" class="organiser_photo">
+                              <img class="icon-choose-image" [src]="right_inter.scanned_application">
+                            </div> -->
+                            <div id='loader' *ngIf="loaderImg">
+                              <img src='../../../../assets/images/loader1.gif' alt='loader' />
+                            </div>
+                          </div>
+                        </div>
+                        <input type="hidden" name="profile_image" id="profile_image3" value="" class="form-control image-preview-filename">
+                        <div class="btn-browser">
+                          <input type="text" class="form-control image-preview-filename sm-input bg-white d-none" disabled="disabled">
+                          <div class="flat-button image-preview-input">
+                            <span class="fa fa-folder-open font-grey"></span>
+                            <span class="image-preview-input-title font-grey"> Upload image </span>
+                            <input type="file" (change)="handleFileInput($event.target.files,'right_interment',right_inter.id)" name="profile_file"
+                              id="profile_file">
+                            <!--<p id="demo"></p>-->
+                          </div>
+                
+                        </div>
+                      </div>
+                    </div>
+                
+                  </div>
+                  <div class="col-xs-12" *ngIf="right_inter.scanned_application !== ''">
+                    <div class="flat-button image-preview-input pull-right mt-30">
+                      <span class="image-preview-input-title font-grey">
+                        <a href="{{right_inter.scanned_application}}" target="_blank">
+                          <!-- *ngIf="gravedata.headstone_image !== ''" -->
+                          <i class="fa fa-download" aria-hidden="true"></i> Download Image</a>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+               
+
+                <div class="row">
+                  <div class="col-sm-12 pt-30 flex-align_center pb-30 ">
+                    <button type="button" class="flat-button" *ngIf="!isRightOfIntermentEditable" (click)="isRightOfIntermentEditable = true">
+                      <i class="fa fa-pencil"></i> Edit</button>
+                    <button type="button" class="flat-button" (click)="updateRightOfIntermentData(right_inter)" *ngIf="isRightOfIntermentEditable"
+                      [disabled]="!RightOfIntermentForm.valid">Save</button>
+
+                    <button type="button" *ngIf="isRightOfIntermentEditable;else yty" class="flat-button dismis" (click)="alert()">Cancel</button>
+                    <ng-template #yty>
+                      <button type="button" class="flat-button" data-dismiss="modal">Cancel</button>
+                    </ng-template>
+
+                    <!-- SUCCESS MESSAGE AFTER ACTION -->
+                    <div class="alert" [ngClass]="{'alert-success' : successMessage.status == 200, 'alert-danger' : successMessage.status == 500}"
+                      style="text-align: center;" *ngIf="successMessage.message" [innerHtml]="successMessage.message"></div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End -->
+
+  <div class="modal fade" id="NewRightOfInterment">
+
+    <div class="modal-dialog modal-lg title-modal">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <div class="Main-title_bg col">
+            <div class="col-xs-12">
+              <h2 class="text-center">New right of interment</h2>
+            </div>
+          </div>
+          <button type="button" (click)="alert()" class="close dismis">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="gray_bg width-custom_800">
+
+            <div class="col-lg-12">
+              <form action="" method="post" #AddRightOfIntermentForm="ngForm">
+                <div class="row " *ngIf="gravedata !== undefined">
+                  <div class="col-md-6">
+                    <label for="plotId"> Plot id </label>
+                    <input type="text" class="form-control form-control-sm bg-white " [(ngModel)]="gravedata.plot_id" name="plotId" id="plotId"
+                      disabled>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="">
+                      <label for="cemetry_id" class=""> Cemetery </label>
+                      <input type="text" class="form-control  bg-white" [(ngModel)]="gravedata.cemetery_id" name="cemetery" id="cemetery" disabled>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="gravedata !== undefined">
+                  <div class="col-md-6">
+                    <label for="section"> Section </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.section" name="section" id="section"
+                      disabled>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <label for="row"> Row </label>
+                        <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.row" name="row" id="row" disabled>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="plotNumber"> Plot number </label>
+                        <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.plot_no" name="plotNumber" id="plotNumber"
+                          disabled>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <hr class="mb-30">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="" id='datetimepicker1'>
+                      <label for="application_date"> Application date </label>
+                      <div class="input-group">
+                        <input type='text' #application_dater="ngModel" class="form-control bg-white date" [ngClass]="{'editableInputField': isRightOfIntermentEditable }"
+                          [(ngModel)]="AddNewRightInterment.application_date" name="application_date" id="application_date"
+                          bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass:'theme-default' }" autocomplete="off"
+                        />
+                        <div class="alert alert-danger" *ngIf="application_dater.invalid">This field is required and must be valid date</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="rightType"> Right type </label>
+                    <select class="form-control form-control-sm" [ngClass]="{'editableInputField': isRightOfIntermentEditable }" #rightTyper="ngModel"
+                      [(ngModel)]="AddNewRightInterment.right_type" name="rightType" id="rightType">
+                      <option value="1"> Burial</option>
+                      <option value="2"> Cremation </option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="rightTyper.invalid">This field is required</div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="termOfRightforrightInter"> Term of right </label>
+                    <select class="form-control form-control-sm" #termOfRightforrightInterr="ngModel" name="termOfRightforrightInter" id="termOfRightforrightInter"
+                      [(ngModel)]="AddNewRightInterment.term_of_right" [ngClass]="{'editableInputField': isRightOfIntermentEditable }">
+                      <option value="1"> Perpetual </option>
+                      <option value="2"> Reserved / 25 years </option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="termOfRightforrightInterr.invalid">This field is required</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="fee_charged">Fee charged ($) </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isRightOfIntermentEditable }"
+                      #fee_chargedr="ngModel" [(ngModel)]="AddNewRightInterment.fee_charged" name="fee_charged" id="fee_charged">
+                    <div class="alert alert-danger" *ngIf="fee_chargedr.invalid">This field is required</div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="feePaidRight"> Fee paid </label>
+                    <div class="form-control-sm">
+                      <label for="feePaidRight" class="radio-inline">
+                        <input type="radio" name="feePaidRight" [(ngModel)]="AddNewRightInterment.fee_paid" [value]="1" id="feePaidRight1"> Yes
+                      </label>
+                      <label for="feePaidRight" class="radio-inline">
+                        <input type="radio" name="feePaidRight" [(ngModel)]="AddNewRightInterment.fee_paid" id="feePaidRight" [value]="2"> No
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <hr class="mb-30">
+
+                <div class="row">
+
+                  <div class="col-sm-12">
+                    <h3 class="subtitle text-center">Applicant details</h3>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="gender"> Gender </label>
+                    <select class="form-control form-control-sm" [ngClass]="{'editableInputField': isRightOfIntermentEditable }" [(ngModel)]="AddNewRightInterment.gender"
+                      name="gender" Placeholder="Gender" id="gender">
+                      <option value="" disabled selected> Select </option>
+                      <option value="1">Male</option>
+                      <option value="2">Female</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="">
+                      <label for="title"> Title </label>
+                      <input type="text" [ngClass]="{'editableInputField': isRightOfIntermentEditable }" class="form-control form-control-sm bg-white"
+                        [(ngModel)]="AddNewRightInterment.title" name="title" id="title">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-4">
+                    <label for="firstName">First name </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isRightOfIntermentEditable }"
+                      #firstNamer="ngModel" [(ngModel)]="AddNewRightInterment.first_name" name="firstName" id="firstName" required>
+                    <div class="alert alert-danger" *ngIf="firstNamer.invalid">This field is required</div>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="middle_name"> Middle name </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isRightOfIntermentEditable }"
+                      [(ngModel)]="AddNewRightInterment.middle_name" name="middle_name" id="middle_name">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="surname"> Surname </label>
+                    <input type="text" #surnamer="ngModel" [ngClass]="{'editableInputField': isRightOfIntermentEditable }" class="form-control form-control-sm bg-white"
+                      [(ngModel)]="AddNewRightInterment.surname" name="surname" id="surname" required>
+                    <div class="alert alert-danger" *ngIf="surnamer.invalid">This field is required</div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="street"> Street </label>
+                    <input type="text" [ngClass]="{'editableInputField': isRightOfIntermentEditable }" class="form-control form-control-sm bg-white"
+                      [(ngModel)]="AddNewRightInterment.pri_street" name="street" id="street">
+
+                  </div>
+                  <div class="col-md-6">
+                    <label for="suburb"> Suburb </label>
+                    <input type="text" [ngClass]="{'editableInputField': isRightOfIntermentEditable }" class="form-control form-control-sm bg-white"
+                      [(ngModel)]="AddNewRightInterment.pri_suburb" name="suburb" id="suburb">
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="state"> State </label>
+                    <input type="text" [ngClass]="{'editableInputField': isRightOfIntermentEditable }" class="form-control form-control-sm bg-white"
+                      [(ngModel)]="AddNewRightInterment.pri_state" name="state" id="state">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="country"> Country </label>
+                    <input type="text" [ngClass]="{'editableInputField': isRightOfIntermentEditable }" class="form-control form-control-sm bg-white"
+                      [(ngModel)]="AddNewRightInterment.pri_country" name="country" id="country">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="pri_postcode">Post code </label>
+                    <input type="text" [ngClass]="{'editableInputField': isRightOfIntermentEditable }" [(ngModel)]="AddNewRightInterment.pri_postcode"
+                      #pripostcoder="ngModel" class="form-control form-control-sm bg-white" name="pri_postcode" id="pri_postcode">
+                    <div class="alert alert-danger" *ngIf="pripostcoder.invalid">This field is required</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="emailr1"> Email (1) </label>
+                    <input type="email" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isRightOfIntermentEditable }"
+                      [(ngModel)]="AddNewRightInterment.email1" #emailr1="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                      name="email" id="email">
+                    <div class="alert alert-danger" *ngIf="emailr1.invalid">This field is required and must be valid Email Address</div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="" id='datetimepicker1'>
+                      <label for="dateOfBirth"> Date of birth </label>
+                      <div class="input-group">
+                        <input type='text' [ngClass]="{'editableInputField': isRightOfIntermentEditable }" class="form-control bg-white date" [(ngModel)]="AddNewRightInterment.dob"
+                          name="dateOfBirth" id="dateOfBirth" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass:'theme-default' }"
+                          autocomplete="off" />
+                        <!-- <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                          </span> -->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="" id='datetimepicker1'>
+                      <label for="dateOfDeath"> Date of death </label>
+                      <div class="input-group">
+                        <input type='text' [ngClass]="{'editableInputField': isRightOfIntermentEditable }" class="form-control bg-white date" name="dateOfDeath"
+                          [(ngModel)]="AddNewRightInterment.dod" id="dateOfDeath" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass:'theme-default' }"
+                          autocomplete="off" />
+                        <!-- <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                          </span> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="causeOfDeath">Cause of death </label>
+                    <input type="text" [ngClass]="{'editableInputField': isRightOfIntermentEditable }" class="form-control form-control-sm bg-white"
+                      [(ngModel)]="AddNewRightInterment.cause_of_death" name="causeOfDeath" id="causeOfDeath">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="occupation">Occupation</label>
+                    <input type="text" [ngClass]="{'editableInputField': isRightOfIntermentEditable }" class="form-control form-control-sm bg-white"
+                      [(ngModel)]="AddNewRightInterment.occupation" name="occupation" id="occupation">
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="nextOfKin1"> Next of kin </label>
+                    <input type="text" [ngClass]="{'editableInputField': isRightOfIntermentEditable }" class="form-control form-control-sm bg-white"
+                      [(ngModel)]="AddNewRightInterment.next_of_kin" name="nextOfKin1" id="nextOfKin1">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="age1"> Age </label>
+                    <input type="text" [ngClass]="{'editableInputField': isRightOfIntermentEditable }" class="form-control form-control-sm bg-white"
+                      [(ngModel)]="AddNewRightInterment.age" name="age" id="age">
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="religion"> Religion </label>
+                    <select class="form-control form-control-sm" [ngClass]="{'editableInputField': isRightOfIntermentEditable }" [(ngModel)]="AddNewRightInterment.religion"
+                      name="religion" id="religion">
+                      <option value="1"> Anglican </option>
+                      <option value="2"> Catholic </option>
+                      <option value="3"> Uniting </option>
+                      <option value="4"> Jehovah witness </option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="returned_serviceman"> Returned serviceman </label>
+                    <div class="form-control-sm">
+                      <label for="returned_serviceman" class="radio-inline">
+                        <input type="radio" name="returned_serviceman" [(ngModel)]="AddNewRightInterment.returned_serviceman" [value]="1" id="returned_serviceman1"> Yes
+                      </label>
+                      <label for="returned_serviceman" class="radio-inline">
+                        <input type="radio" name="returned_serviceman" [(ngModel)]="AddNewRightInterment.returned_serviceman" id="returned_serviceman"
+                          [value]="2"> No
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <hr class="mb-30">
+
+                <!-- <div class="row ">
+                <div class="col-lg-12">
+                  <div class="mb-30">
+                    <label for="headStonePhoto" class="  p-0"> Linked files </label>
+                    <div class="form-group organiser-wrapper">
+                      <div class="">
+                        <div class="banner_photo">
+                          <div id="targetLayer3" class="organiser_photo">
+                            <img onclick="showSource();" class="icon-choose-image" [src]="imageUrl">
+                          </div>
+                          <div id="profileload" align="center" class="d-none">
+                            <img [src]="data.interment.linked_files">
+                          </div>
+                        </div>
+                      </div>
+                      <input type="hidden" name="profile_image" id="profile_image3" value="" class="form-control image-preview-filename">
+                      <div class="btn-browser">
+                        <input type="text" class="form-control image-preview-filename sm-input bg-white d-none">
+                        <div class="flat-button image-preview-input">
+                          <span class="fa fa-folder-open font-grey"></span>
+                          <span class="image-preview-input-title font-grey">Images, PDFs, other files </span>
+                          <input type="file" (change)="handleFileInput($event.target.files,'interment',data.interment.id)" name="profile_file" id="profile_file">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+                <div class="row">
+                  <div class="col-sm-12 pt-30 flex-align_center pb-30 ">
+                    <button type="button" class="flat-button" (click)="AddRightOfIntermentData(AddNewRightInterment)" [disabled]="!AddRightOfIntermentForm.valid">Save</button>
+
+                    <button type="button" *ngIf="isRightOfIntermentEditable" class="flat-button dismis" (click)="alert()">Cancel</button>
+                    <!-- SUCCESS MESSAGE AFTER ACTION -->
+
+                    <div class="alert" [ngClass]="{'alert-success' : successMessage.status == 200, 'alert-danger' : successMessage.status == 500}"
+                      style="text-align: center;" *ngIf="successMessage.message" [innerHtml]="successMessage.message"></div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- New Right of Interment END -->
+
+  <!-- View/Edit Interest in Right -->
+  <div class="modal fade" id="InterestInRight">
+    <div class="modal-dialog modal-lg title-modal">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <div class="Main-title_bg col">
+            <div class="col-xs-12">
+              <h2 class="text-center">View/edit interest in right</h2>
+            </div>
+          </div>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="gray_bg width-custom_800">
+
+            <div class="col-lg-12">
+              <form action="" method="post">
+                <div class="row " *ngIf="gravedata !== undefined">
+                  <div class="col-md-6">
+                    <label for="plotId"> Plot id </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.plot_id" name="plotId" id="plotId"
+                      disabled>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="">
+                      <label for="cemetry_id" class=""> Cemetery </label>
+                      <input type="text" class="form-control  bg-white" [(ngModel)]="gravedata.cemetery_id" name="cemetery" id="cemetery" disabled>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="gravedata !== undefined">
+                  <div class="col-md-6">
+                    <label for="section"> Section </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.section" name="section" id="section"
+                      disabled>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <label for="row"> Row </label>
+                        <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.row" name="row" id="row" disabled>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="plotNumber"> Plot number </label>
+                        <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.plot_no" name="plotNumber" id="plotNumber"
+                          disabled>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <hr class="mb-30">
+
+                <div class="row" *ngIf="interested_person !== null && interested_person !== undefined">
+                  <div class="col-md-6">
+                    <label for="rightOfInterment"> Interested person </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="interested_person.first_name" name="rightOfInterment"
+                      id="rightOfInterment" Placeholder='Name (Person_ID)'>
+                  </div>
+                  <div class="col-md-6 flex-align_center">
+                    <button type="button" class="flat-button" data-keyboard="false" data-backdrop="static" (click)="getPersonDataForView(interested_person.person_id,false)"
+                      data-toggle="modal" data-target="#NewPerson">
+                      <i class="fa fa-eye"></i> View </button>
+                    <button type="button" class="flat-button" data-keyboard="false" data-backdrop="static" (click)="getPersonDataForView(interested_person.person_id,true)"
+                      data-toggle="modal" data-target="#NewPerson">
+                      <i class="fa fa-pencil"></i> Edit </button>
+                    <button type="button" class="flat-button">New </button>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="">
+                      <label for="termOfRight"> Address </label>
+                      <input type="text" class="form-control form-control-sm bg-white" name="termOfRight" id="termOfRight">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="interested_person !== null && interested_person !== undefined">
+                  <div class="col-md-6">
+                    <label for="feePaid"> Phone (home) </label>
+                    <input type="tel" class="form-control form-control-sm bg-white" [(ngModel)]="interested_person.phone_home" name="feeCharged"
+                      id="phone_home">
+                  </div>
+                  <div class="col-md-6">
+                    <div class="">
+                      <label for="phone_mobile"> Phone (mobile) </label>
+                      <input type="tel" class="form-control form-control-sm bg-white" [(ngModel)]="interested_person.phone_mobile" name="phone_mobile"
+                        id="phone_mobile">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="interested_person !== null && interested_person !== undefined">
+                  <div class="col-md-6">
+                    <label for="email1">Email </label>
+                    <input type="email" class="form-control form-control-sm bg-white" [(ngModel)]="interested_person.email1" name="email1" id="email1">
+                  </div>
+
+                </div>
+
+                <hr class="mb-30">
+
+                <div class="row" *ngIf="interested_right !== null && interested_right !== undefined">
+                  <div class="col-md-6">
+                    <div class="" id='datetimepicker1'>
+                      <label for="dateOfEnquiry"> Date of enquiry </label>
+                      <div class="input-group">
+                        <input type='text' class="form-control bg-white date" [(ngModel)]="interested_right.date_enquiry" name="dateOfEnquiry" id="dateOfEnquiry"
+                          bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass:'theme-default' }" autocomplete="off"
+                        />
+                        <!-- <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                          </span> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="interested_right !== null && interested_right !== undefined">
+                  <div class="col-md-12">
+                    <label for="comments"> Comments </label>
+                    <textarea class="form-control bg-white" rows="3" [(ngModel)]="interested_right.comments" name="comments" id="comments"> </textarea>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-12 pt-30 flex-align_center pb-30 ">
+                    <button type="button" class="flat-button">
+                      <i class="fa fa-pencil"></i> Edit</button>
+                    <button type="button" class="flat-button">Save</button>
+                    <button type="button" class="flat-button" data-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End -->
+
+
+  <!-- View/Edit/New Interment -->
+  <div class="modal fade" id="ViewInterment">
+    <div class="modal-dialog modal-lg title-modal" [hidden]="IsmodelShow">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <div class="Main-title_bg col">
+            <div class="col-xs-12">
+              <h2 class="text-center">Interment details</h2>
+            </div>
+          </div>
+          <button type="button" *ngIf="isIntermentFormEditable;else ooo" (click)="alert()" class="close dismis">&times;</button>
+          <ng-template #ooo>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </ng-template>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="gray_bg width-custom_800">
+
+            <div class="col-lg-12">
+              <form action="" method="post" #VieweditIntermentForm="ngForm">
+                <div class="row " *ngIf="gravedata !== undefined">
+                  <div class="col-md-6">
+                    <label for="plotId"> Plot Id </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.plot_id" name="plotId" id="plotId"
+                      disabled>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="">
+                      <label for="cemetry_id" class=""> Cemetery </label>
+                      <input type="text" class="form-control  bg-white" [(ngModel)]="gravedata.cemetery_id" name="cemetery" id="cemetery" disabled>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="gravedata !== undefined">
+                  <div class="col-md-6">
+                    <label for="section"> Section </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.section" name="section" id="section"
+                      disabled>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <label for="row"> Row </label>
+                        <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.row" name="row" id="row" disabled>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="plotNumber"> Plot number </label>
+                        <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.plot_no" name="plotNumber" id="plotNumber"
+                          disabled>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <hr class="mb-30">
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="Interred"> Interred </label>
+                    <input type="text" class="form-control form-control-sm bg-white" value="{{data.interment.personData.surname}} {{data.interment.personData.first_name}}"
+                      name="Interred" id="Interred" Placeholder='Interred Person' disabled="" required>
+                  </div>
+                  <div class="col-md-6 flex-align_center">
+                    <button type="button" *ngIf="data.interment.personData.person_id !== undefined && data.interment.personData.person_id !== ''"
+                      class="flat-button" data-keyboard="false" data-backdrop="static" data-toggle="modal" (click)="getPersonDataForView(data.interment.personData.person_id,false)"
+                      data-target="#NewPerson">
+                      <i class="fa fa-eye"></i> View </button>
+                    <!-- <button type="button" class="flat-button" data-keyboard="false" data-backdrop="static" data-toggle="modal"  (click)="getPersonDataForView(data.interment.personData.person_id,true)" data-target="#NewPerson"><i class="fa fa-pencil"></i> Edit </button> -->
+                    <!-- <button type="button" class="flat-button">New </button> -->
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="funeralDirectoree"> Funeral director </label>
+                    
+                    <select class="form-control form-control-sm" [ngClass]="{'editableInputField': isIntermentFormEditable }" #funeralDirectoree="ngModel"
+                      name="funeral_director" id="funeral_director" [(ngModel)]="data.interment.funeral_director" [disabled]="!isIntermentFormEditable">
+                      <option value="" disabled selected>Select</option>
+                      <option *ngFor="let funeral of FuneralList" [value]="funeral.person_id">{{funeral.first_name}} {{funeral.middle_name}} {{funeral.surname}}</option>
+                    </select>
+
+                  </div>
+                  <div class="col-md-6 flex-align_center" *ngIf="!isIntermentFormEditable && data.interment.funeral_director !== '';else editable">
+                    <button type="button" class="flat-button" data-keyboard="false" data-backdrop="static" data-toggle="modal" (click)="getPersonDataForView(data.interment.funeral_director,false)"
+                      data-target="#NewPerson">
+                      <i class="fa fa-eye"></i> View </button>
+                    <!-- <button type="button" class="flat-button" *ngIf="data.interment.funeral_director != ''" data-keyboard="false" data-backdrop="static" data-toggle="modal"  (click)="getPersonDataForView(data.interment.funeral_director,true)" data-target="#NewPerson"><i class="fa fa-pencil"></i> Edit </button> -->
+                    <!-- <button type="button" class="flat-button">New </button> -->
+                  </div>
+                  <ng-template #editable>
+                    <div class="col-md-6 flex-align_center">
+                      <button type="button" class="flat-button pull-right" data-keyboard="false" data-backdrop="static" data-toggle="modal" data-target="#addNewPerson"
+                        (click)="newBusinessFuneral('funeral_director',data.interment.cemetery_id)">
+                        <i class="fa fa-plus"></i> New </button>
+                    </div>
+                  </ng-template>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="intermentMinisteree"> Interment minister </label>
+                    <!-- <input type="text" class="form-control form-control-sm bg-white" #intermentMinisteree="ngModel" [(ngModel)]="data.interment.interment_minister" [ngClass]="{'editableInputField': isIntermentFormEditable }" name="intermentMinister" id="intermentMinister" Placeholder='None' [disabled]="!isIntermentFormEditable"> -->
+
+                    <select class="form-control form-control-sm" [ngClass]="{'editableInputField': isIntermentFormEditable }" #intermentMinisteree="ngModel"
+                      [(ngModel)]="data.interment.interment_minister" name="intermentMinister" id="intermentMinister" Placeholder='None'
+                      [disabled]="!isIntermentFormEditable">
+                      <option value="" disabled selected>Select</option>
+                      <option *ngFor="let minister of MinisterList" [value]="minister.person_id">{{minister.first_name}} {{minister.middle_name}} {{minister.surname}}</option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="intermentMinisteree.invalid">This field is required</div>
+                  </div>
+                  <div class="col-md-6 flex-align_center" *ngIf="!isIntermentFormEditable && data.interment.interment_minister !== '' ;else editableminister">
+                    <button type="button" class="flat-button" data-keyboard="false" data-backdrop="static" data-toggle="modal" (click)="getPersonDataForView(data.interment.interment_minister,false)"
+                      data-target="#NewPerson">
+                      <i class="fa fa-eye"></i> View </button>
+                    <!-- <button type="button" class="flat-button" *ngIf="data.interment.interment_minister != ''" data-keyboard="false" data-backdrop="static" data-toggle="modal"  (click)="getPersonDataForView(data.interment.interment_minister,true)" data-target="#NewPerson"><i class="fa fa-pencil"></i> Edit </button> -->
+                    <!-- <button type="button" class="flat-button">New </button> -->
+                  </div>
+                  <ng-template #editableminister>
+                    <div class="col-md-6 flex-align_center">
+                      <button type="button" class="flat-button pull-right" data-keyboard="false" data-backdrop="static" data-toggle="modal" data-target="#addNewPerson"
+                        (click)="newBusinessMinister('interment_minister',data.interment.cemetery_id)">
+                        <i class="fa fa-plus"></i> New </button>
+                    </div>
+                  </ng-template>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="nextOfKinee"> Next of kin </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }"
+                       name="nextOfKin" id="nextOfKin" value="{{data.interment.nextOfKin_Data.surname}} {{data.interment.nextOfKin_Data.first_name}}"
+                      Placeholder='None' disabled>
+                    <!-- <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }" #nextOfKinee="ngModel" name="nextOfKin" id="nextOfKin" [(ngModel)]="data.interment.next_of_kin"
+                      Placeholder='None' [disabled]="!isIntermentFormEditable"> -->
+                    <!-- <select class="form-control form-control-sm" [ngClass]="{'editableInputField': isIntermentFormEditable }" #nextOfKinee="ngModel" name="nextOfKin" id="nextOfKin" [(ngModel)]="data.interment.next_of_kin" Placeholder='None' [disabled]="!isIntermentFormEditable">
+                        <option value="" disabled selected>Select</option>
+                        <option *ngFor="let kin of nextOFkinList" [value]="kin.person_id">{{kin.first_name}} {{kin.middle_name}} {{kin.surname}}</option>
+                      </select> -->
+
+                    <!-- <div class="alert alert-danger" *ngIf="nextOfKinee.invalid">This field is required</div> -->
+                  </div>
+                  <div class="col-md-6 flex-align_center" *ngIf="!isIntermentFormEditable || data.interment.next_of_kin !== '' ;else editablekin">
+                    <button type="button" class="flat-button" *ngIf="data.interment.next_of_kin != ''" data-keyboard="false" data-backdrop="static"
+                      data-toggle="modal" (click)="getPersonDataForView(data.interment.next_of_kin,false)" data-target="#NewPerson">
+                      <i class="fa fa-eye"></i> View </button>
+                    <!-- <button type="button" class="flat-button" *ngIf="data.interment.next_of_kin != ''" data-keyboard="false" data-backdrop="static" data-toggle="modal"  (click)="getPersonDataForView(data.interment.next_of_kin,true)" data-target="#NewPerson"><i class="fa fa-pencil"></i> Edit </button> -->
+                  </div>
+
+                  <ng-template #editablekin>
+                    <div class="col-md-6 flex-align_center">
+                      <button type="button" class="flat-button pull-right" data-keyboard="false" data-backdrop="static" data-toggle="modal" data-target="#addNewPerson"
+                        (click)="newBusinessKin('next_of_kin',data.interment.cemetery_id,data.interment.id)">
+                        <i class="fa fa-plus"></i> New </button>
+                    </div>
+                  </ng-template>
+                </div>
+                <hr class="mb-30">
+                <h2 class="text-center subtitle">Interment details</h2>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="">
+                      <label for="intermentDepthee"> Interment depth (m) </label>
+                      <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }"
+                        #intermentDepthee="ngModel" pattern="^(0|[1-9][0-9]*)$" [(ngModel)]="data.interment.interment_depth"
+                        name="intermentDepth" id="intermentDepth" [disabled]="!isIntermentFormEditable" required>
+                      <div class="alert alert-danger" *ngIf="intermentDepthee.invalid">This field is required and only be numeric</div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="" id='datetimepicker1'>
+                      <label for="interment_dateee"> Interment date </label>
+                      <div class="input-group">
+                        <input type='text' class="form-control bg-white date" [ngClass]="{'editableInputField': isIntermentFormEditable }" #interment_dateee="ngModel"
+                          [(ngModel)]="data.interment.interment_date" name="interment_date" id="interment_date" [disabled]="!isIntermentFormEditable"
+                          bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass:'theme-default' }" autocomplete="off"
+                          required/>
+                        <!-- <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                          </span> -->
+                      </div>
+                      <div class="alert alert-danger" *ngIf="interment_dateee.invalid">This field is required and must be valid date</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <!-- <div class="col-md-12">
+                      <div class="" id='datetimepicker1'>
+                        <label for="intermentTypee"> Interment type </label>
+                        <input type="date" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }" #intermentTypee="ngModel" [(ngModel)]="data.interment.interment_type" name="intermentType" id="intermentType" [disabled]="!isIntermentFormEditable" required>
+                        <div class="alert alert-danger" *ngIf="intermentTypee.invalid">This field is required</div>
+                      </div>
+                    </div> -->
+                  <div class="col-md-12">
+                    <label for="intermentTypee"> Interment type </label>
+                    <select class="form-control form-control-sm" [ngClass]="{'editableInputField': isIntermentFormEditable }" #intermentTypee="ngModel"
+                      [(ngModel)]="data.interment.interment_type" name="intermentType" id="intermentType" [disabled]="!isIntermentFormEditable"
+                      required>
+                      <option selected disabled>Select</option>
+                      <option value="1"> Burial</option>
+                      <option value="2"> Cremation </option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="intermentTypee.invalid">This field is required</div>
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <label for="commentsee"> Comments </label>
+                    <textarea class="form-control textarea-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }" #commentsee="ngModel"
+                      rows="3" [(ngModel)]="data.interment.comments" name="comments" id="comments" [disabled]="!isIntermentFormEditable"></textarea>
+                    <div class="alert alert-danger" *ngIf="commentsee.invalid">This field is required</div>
+                  </div>
+                </div>
+
+                <hr class="mb-30">
+
+                <div class="row">
+
+                  <div class="col-sm-12">
+                    <h2 class="subtitle text-center">Interred details</h2>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="gender"> Gender </label>
+                    <!-- <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="data.interment.personData.gender" name="gender" id="gender" disabled> -->
+                    <select class="form-control form-control-sm" [(ngModel)]="data.interment.personData.gender" name="gender" Placeholder="Gender"
+                      id="gender" disabled>
+                      <option value="" disabled selected> Select </option>
+                      <option value="1">Male</option>
+                      <option value="2">Female</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="">
+                      <label for="title"> Title </label>
+                      <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="data.interment.personData.title" name="title"
+                        id="title" disabled>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-4">
+                    <label for="firstName">First name </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="data.interment.personData.first_name" name="firstName"
+                      id="firstName" disabled>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="middle_name"> Middle name </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="data.interment.personData.middle_name" name="middle_name"
+                      id="middle_name" disabled>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="surname"> Surname </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="data.interment.personData.surname" name="surname"
+                      id="surname" disabled>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="street"> Street </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="data.interment.personData.pri_street" name="street"
+                      id="street" disabled>
+
+                  </div>
+                  <div class="col-md-6">
+                    <label for="suburb"> Suburb </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="data.interment.personData.pri_suburb" name="suburb"
+                      id="suburb" disabled>
+
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="state"> State </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="data.interment.personData.pri_state" name="state"
+                      id="state" disabled>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="country"> Country </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="data.interment.personData.pri_country" name="country"
+                      id="country" disabled>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="" id='datetimepicker1'>
+                      <label for="dateOfBirth"> Date of birth </label>
+                      <div class="input-group">
+                        <input type='text' class="form-control bg-white" [(ngModel)]="data.interment.personData.dob" name="dateOfBirth" id="dateOfBirth"
+                          disabled/>
+                        <!-- <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                          </span> -->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="" id='datetimepicker1'>
+                      <label for="dateOfDeath"> Date of death </label>
+                      <div class="input-group">
+                        <input type='text' class="form-control bg-white" name="dateOfDeath" [(ngModel)]="data.interment.personData.dod" id="dateOfDeath"
+                          disabled/>
+                        <!-- <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                          </span> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="causeOfDeath">Cause of death </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="data.interment.personData.cause_of_death" name="causeOfDeath"
+                      id="causeOfDeath" disabled>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="occupation">Occupation</label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="data.interment.personData.occupation" name="occupation"
+                      id="occupation" disabled>
+                  </div>
+                </div>
+
+                <div class="row">
+             
+                  <div class="col-md-6">
+                    <label for="age1"> Age </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="data.interment.personData.age" name="age" id="age"
+                      disabled>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="religion"> Religion </label>
+                    <select class="form-control form-control-sm" [(ngModel)]="data.interment.personData.religion" name="religion" id="religion"
+                      disabled>
+                      <option value="1"> Anglican </option>
+                      <option value="2"> Catholic </option>
+                      <option value="3"> Uniting </option>
+                      <option value="4"> Jehovah witness </option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <!-- <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="data.interment.personData.returned_serviceman" name="returnedServiceman" id="returnedServiceman" disabled> -->
+                    <label for="returnedServiceman"> Returned serviceman </label>
+                    <div class="form-control-sm">
+                      <label *ngIf="data.interment.personData.returned_serviceman == 1;else rtn" for="returnedServiceman" class="radio-inline">
+                        <input type="radio" name="returnedServiceman" [(ngModel)]="data.interment.personData.returned_serviceman" id="returnedServiceman"
+                          checked disabled> Yes
+                      </label>
+                      <ng-template #rtn>
+                        <label for="returnedServiceman" class="radio-inline">
+                          <input type="radio" name="returnedServiceman" [(ngModel)]="data.interment.personData.returned_serviceman" id="returnedServiceman"
+                            disabled> Yes
+                        </label>
+                      </ng-template>
+
+                      <label *ngIf="data.interment.personData.returned_serviceman == 2;else rtn1" for="returnedServiceman" class="radio-inline">
+                        <input type="radio" name="returnedServiceman" [(ngModel)]="data.interment.personData.returned_serviceman" id="returnedServiceman"
+                          checked disabled> No
+                      </label>
+                      <ng-template #rtn1>
+                        <label for="returnedServiceman" class="radio-inline">
+                          <input type="radio" name="returnedServiceman" [(ngModel)]="data.interment.personData.returned_serviceman" id="returnedServiceman"
+                            disabled> No
+                        </label>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+
+                <hr class="mb-30">
+
+                <div class="row" *ngIf="data.interment.linked_files !== undefined">
+                  <div class="col-xs-12">
+                    <label for="headStonePhoto" class="  p-0"> Linked files </label>
+                  </div>
+                  <div class="col-lg-12">
+                    <div class="mb-30 mt-30">
+                      <div class="form-group organiser-wrapper">
+                        <div class="">
+                          <div class="banner_photo">
+                            <!-- <div id="targetLayer3" class="organiser_photo">
+                              <img onclick="showSource();" class="icon-choose-image" [src]="imageUrl">
+                            </div> -->
+                            <div id="targetLayer3" class="organiser_photo">
+                              <img class="icon-choose-image" *ngIf="filetype == 'png' || filetype == 'jpg' || filetype == 'jpeg'" [src]="data.interment.linked_files">
+                              <iframe *ngIf="filetype == 'pdf' || filetype == 'txt'" [src]="data.interment.linked_files" style="width:100%; height:300px;" frameborder="0"></iframe>
+                            </div>
+                            <div id='loader' *ngIf="loaderImg">
+                              <img src='../../../../assets/images/loader1.gif' alt='loader' />
+                            </div>
+                          </div>
+                        </div>
+                        <input type="hidden" name="profile_image" id="profile_image3" value="" class="form-control image-preview-filename">
+                        <div class="btn-browser">
+                          <input type="text" class="form-control image-preview-filename sm-input bg-white d-none" disabled="disabled">
+                          <div class="flat-button image-preview-input">
+                            <span class="fa fa-folder-open font-grey"></span>
+                            <span class="image-preview-input-title font-grey"> Upload image </span>
+                            <input type="file" (change)="handleFileInput($event.target.files,'interment',data.interment.id)" name="profile_file" id="profile_file">
+                            <!--<p id="demo"></p>-->
+                          </div>
+                
+                        </div>
+                      </div>
+                    </div>
+                
+                  </div>
+                  <div class="col-xs-12" *ngIf="data.interment.linked_files !== ''">
+                    <div class="flat-button image-preview-input pull-right mt-30">
+                      <span class="image-preview-input-title font-grey">
+                        <a href="{{data.interment.linked_files}}" target="_blank">
+                          <!-- *ngIf="gravedata.headstone_image !== ''" -->
+                          <i class="fa fa-download" aria-hidden="true"></i> Download Image</a>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-12 pt-30 flex-align_center pb-30 ">
+                    <button type="button" class="flat-button" *ngIf="!isIntermentFormEditable" (click)="isIntermentFormEditable = true">
+                      <i class="fa fa-pencil"></i> Edit</button>
+                    <button type="button" class="flat-button" *ngIf="isIntermentFormEditable" (click)="updateIntermentData(data.interment,data.interment.person_id)"
+                      [disabled]="!VieweditIntermentForm.valid">Save</button>
+
+                    <button type="button" class="flat-button dismis" *ngIf="isIntermentFormEditable;else ooo1" (click)="alert()">Cancel</button>
+                    <ng-template #ooo1>
+                      <button type="button" class="flat-button" data-dismiss="modal">Cancel</button>
+                    </ng-template>
+
+
+                    <!-- <button type="button" class="flat-button dismis" (click)="alert()">Cancel</button>   -->
+
+                    <div class="alert" [ngClass]="{'alert-success' : successMessage.status == 200, 'alert-danger' : successMessage.status == 500}"
+                      style="text-align: center;" *ngIf="successMessage.message" [innerHtml]="successMessage.message"></div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End -->
+
+  <!-- MODAL FOR ADD NEW INTERMENT -->
+  <div class="modal fade" id="AddNewInterment">
+    <div class="modal-dialog modal-lg title-modal">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <div class="Main-title_bg col">
+            <div class="col-xs-12">
+              <h2 class="text-center"> New interment </h2>
+            </div>
+          </div>
+          <button type="button" class="close dismis" (click)="alert()">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="gray_bg width-custom_800">
+
+            <div class="col-lg-12">
+              <form action="" method="post" name="newintermentAddForm" #newintermentAddForm="ngForm">
+                <div class="row " *ngIf="gravedata !== undefined">
+                  <div class="col-md-6">
+                    <label for="plotId"> Plot id </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.plot_id" name="plotId" id="plotId"
+                      disabled>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="">
+                      <label for="cemetry_id" class=""> Cemetery </label>
+                      <input type="text" class="form-control  bg-white" [(ngModel)]="gravedata.cemetery_id" name="cemetery" id="cemetery" disabled>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="gravedata !== undefined">
+                  <div class="col-md-6">
+                    <label for="section"> Section </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.section" name="section" id="section"
+                      disabled>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <label for="row"> Row </label>
+                        <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.row" name="row" id="row" disabled>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="plotNumber"> Plot number </label>
+                        <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="gravedata.plot_no" name="plotNumber" id="plotNumber"
+                          disabled>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <hr class="mb-30">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="Interred"> Interred </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }"
+                      #Interred="ngModel" [(ngModel)]="AddNewInterment.first_name" name="Interred" id="Interred" Placeholder='Interred'
+                      required>
+                    <div class="alert alert-danger" *ngIf="Interred.invalid">This field is required</div>
+                  </div>
+
+                </div>
+
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="funeralDirector"> Funeral director </label>
+                    <select class="form-control form-control-sm" [ngClass]="{'editableInputField': isIntermentFormEditable }" #funeral_director="ngModel"
+                      name="funeral_director" id="funeral_director" [(ngModel)]="AddNewInterment.funeral_director" Placeholder='Funeral director'>
+                      <option value="" disabled selected>Select</option>
+                      <option *ngFor="let funeral of FuneralList" [value]="funeral.person_id">{{funeral.first_name}} {{funeral.middle_name}} {{funeral.surname}}</option>
+                    </select>
+
+                    <!-- <input type="text" class="form-control form-control-sm bg-white" #funeral_director = "ngModel" [(ngModel)]="AddNewInterment.funeral_director" name="funeral_director" id="funeral_director" Placeholder='Funeral director' > -->
+                    <div class="alert alert-danger" *ngIf="funeral_director.invalid">This field is required</div>
+                  </div>
+                  <div class="col-md-6 flex-align_center">
+                    <button type="button" class="flat-button pull-right" data-keyboard="false" data-backdrop="static" data-toggle="modal" data-target="#addNewPerson"
+                      (click)="newBusinessFuneral('funeral_director',gravedata.cemetery_id)">
+                      <i class="fa fa-plus"></i> New </button>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="intermentMinister"> Interment minister </label>
+                    <!-- <input type="text" class="form-control form-control-sm bg-white" #intermentMinister = "ngModel" [(ngModel)]="AddNewInterment.interment_minister" name="intermentMinister" id="intermentMinister" Placeholder='Interment minister'> -->
+                    <select class="form-control form-control-sm" [ngClass]="{'editableInputField': isIntermentFormEditable }" #intermentMinister="ngModel"
+                      [(ngModel)]="AddNewInterment.interment_minister" name="intermentMinister" id="intermentMinister" Placeholder='None'>
+                      <option value="" disabled selected>Select</option>
+                      <option *ngFor="let minister of MinisterList" [value]="minister.person_id">{{minister.first_name}} {{minister.middle_name}} {{minister.surname}}</option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="intermentMinister.invalid">This field is required</div>
+                  </div>
+                  <div class="col-md-6 flex-align_center">
+                    <button type="button" class="flat-button pull-right" data-keyboard="false" data-backdrop="static" data-toggle="modal" data-target="#addNewPerson"
+                      (click)="newBusinessMinister('interment_minister',gravedata.cemetery_id)">
+                      <i class="fa fa-plus"></i> New </button>
+                  </div>
+
+                </div>
+
+
+                <h2 class="text-center subtitle">Next of kin details</h2>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="nextOfKinfirst"> First name </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }"
+                      #nextOfKinfirst="ngModel" [(ngModel)]="AddNewInterment.next_of_kinFirst" name="nextOfKin" id="nextOfKinfirst"
+                      Placeholder='First name'>
+
+                    <!-- <select class="form-control form-control-sm" #nextOfKin="ngModel"
+                        name="nextOfKin" id="nextOfKin" [(ngModel)]="AddNewInterment.next_of_kinForInter" Placeholder='None'>
+                        <option value="" disabled selected>Select</option>
+                        <option *ngFor="let kin of nextOFkinList" [value]="kin.person_id">{{kin.first_name}} {{kin.middle_name}} {{kin.surname}}</option>
+                      </select> -->
+                    <div class="alert alert-danger" *ngIf="nextOfKinfirst.invalid">This field is required</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="next_of_kinLast"> Last name </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }"
+                      #next_of_kinLast="ngModel" [(ngModel)]="AddNewInterment.next_of_kinLast" name="next_of_kinLast" id="next_of_kinLast"
+                      Placeholder='Last name'>
+
+                    <!-- <select class="form-control form-control-sm" #nextOfKin="ngModel"
+                                            name="nextOfKin" id="nextOfKin" [(ngModel)]="AddNewInterment.next_of_kinForInter" Placeholder='None'>
+                                            <option value="" disabled selected>Select</option>
+                                            <option *ngFor="let kin of nextOFkinList" [value]="kin.person_id">{{kin.first_name}} {{kin.middle_name}} {{kin.surname}}</option>
+                                          </select> -->
+                    <div class="alert alert-danger" *ngIf="next_of_kinLast.invalid">This field is required</div>
+                  </div>
+                  <!-- <div class="col-md-6 flex-align_center">
+                      <button type="button" class="flat-button pull-right" data-keyboard="false" data-backdrop="static" data-toggle="modal" data-target="#addNewPerson"
+                        (click)="newBusinessKin('next_of_kin',gravedata.cemetery_id)">
+                        <i class="fa fa-plus"></i> New </button>
+                    </div> -->
+                </div>
+                <hr class="mb-30">
+                <h2 class="text-center subtitle">Interment details</h2>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="">
+                      <label for="intermentDepth"> Interment depth (m) </label>
+                      <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }"
+                        #intermentDepth="ngModel" [(ngModel)]="AddNewInterment.interment_depth" pattern="^(0|[1-9][0-9]*)$"
+                        name="intermentDepth" Placeholder="Interment depth (m)" id="intermentDepth">
+                      <div class="alert alert-danger" *ngIf="intermentDepth.invalid">This field is required and only be numeric</div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+
+                    <!-- <div class="input-group date form-group" data-toggle="datepicker">
+                        <input type='text' class="form-control bg-white" #interment_date="ngModel" [(ngModel)]="AddNewInterment.interment_date"
+                          autocomplete="off" name="interment_date" id="interment_date" />
+                        <div class="input-group-addon">
+                          <span class="fa fa-calendar-o icon"></span>
+                        </div>
+                      </div> -->
+                    <div class="" id='datetimepicker1'>
+                      <label for="interment_date"> Interment date </label>
+                      <div class="input-group">
+                        <!-- <input type='date' class="form-control bg-white" #interment_date = "ngModel" [(ngModel)]="AddNewInterment.interment_date" autocomplete="off" name="interment_date" id="interment_date"/> -->
+                        <input type="text" placeholder="Interment Date" [ngClass]="{'editableInputField': isIntermentFormEditable }" class="form-control bg-white date"
+                          #interment_date="ngModel" [(ngModel)]="AddNewInterment.interment_date" name="interment_date" id="interment_date"
+                          bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass:'theme-default' }" autocomplete="off">
+                      </div>
+                      <div class="alert alert-danger" *ngIf="interment_date.invalid">This field is required and must be valid date</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <!-- <div class="col-md-12">
+                      <div class=""  id='datetimepicker1'>
+                        <label for="intermentType"> Interment type </label>
+                        <input type="date" class="form-control form-control-sm bg-white" #intermentType = "ngModel" [(ngModel)]="AddNewInterment.interment_type" Placeholder="Interment type" name="intermentType" id="intermentType" required>
+                        <div class="alert alert-danger" *ngIf="intermentType.invalid">This field is required</div>
+                      </div>
+                    </div> -->
+
+                  <div class="col-md-12">
+                    <label for="intermentType"> Interment type </label>
+                    <select class="form-control form-control-sm" [ngClass]="{'editableInputField': isIntermentFormEditable }" #intermentType="ngModel"
+                      [(ngModel)]="AddNewInterment.interment_type" name="intermentType" id="intermentType">
+                      <option selected disabled>Select</option>
+                      <option value="1"> Burial</option>
+                      <option value="2"> Cremation </option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="intermentType.invalid">This field is required</div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <label for="comments"> Comments </label>
+                    <textarea class="form-control textarea-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }" rows="3"
+                      #comments="ngModel" [(ngModel)]="AddNewInterment.comments" name="comments" id="comments"></textarea>
+                    <div class="alert alert-danger" *ngIf="comments.invalid">This field is required</div>
+                  </div>
+                </div>
+
+                <hr class="mb-30">
+                <div class="row">
+
+                  <div class="col-sm-12">
+                    <h2 class="subtitle text-center">Interred details</h2>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="gender"> Gender </label>
+                    <select class="form-control form-control-sm" [ngClass]="{'editableInputField': isIntermentFormEditable }" #gender="ngModel"
+                      [(ngModel)]="AddNewInterment.gender" name="gender" Placeholder="Gender" id="gender">
+                      <option disabled selected> Select </option>
+                      <option value="1">Male</option>
+                      <option value="2">Female</option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="gender.invalid">This field is required</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="">
+                      <label for="title"> Title </label>
+                      <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }"
+                        #title="ngModel" [(ngModel)]="AddNewInterment.title" name="title" id="title">
+                      <div class="alert alert-danger" *ngIf="title.invalid">This field is required</div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <div class="col-md-4">
+                    <label for="firstName">First name </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }"
+                      #firstName="ngModel" [(ngModel)]="AddNewInterment.first_name" name="firstName" id="firstName" required>
+                    <div class="alert alert-danger" *ngIf="firstName.invalid">This field is required</div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <label for="middle_name"> Middle name </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }"
+                      [(ngModel)]="AddNewInterment.middle_name" name="middle_name" id="middle_name">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="surname"> Surname </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }"
+                      #surname="ngModel" [(ngModel)]="AddNewInterment.surname" name="surname" id="surname" required>
+                    <div class="alert alert-danger" *ngIf="surname.invalid">This field is required</div>
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="street"> Street </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }"
+                      #street="ngModel" [(ngModel)]="AddNewInterment.pri_street" name="street" id="street">
+                    <div class="alert alert-danger" *ngIf="street.invalid">This field is required</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="suburb"> Suburb </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }"
+                      #suburb="ngModel" [(ngModel)]="AddNewInterment.pri_suburb" name="suburb" id="suburb">
+                    <div class="alert alert-danger" *ngIf="suburb.invalid">This field is required</div>
+                  </div>
+
+
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="state"> State </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }"
+                      #state="ngModel" [(ngModel)]="AddNewInterment.pri_state" name="state" id="state">
+                    <div class="alert alert-danger" *ngIf="state.invalid">This field is required</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="country"> Country </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }"
+                      #country="ngModel" [(ngModel)]="AddNewInterment.pri_country" name="country" id="country">
+                    <div class="alert alert-danger" *ngIf="country.invalid">This field is required</div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="" id='datetimepicker1'>
+                      <label for="dateOfBirth"> Date of birth </label>
+                      <div class="input-group">
+                        <input type='text' class="form-control bg-white date" [ngClass]="{'editableInputField': isIntermentFormEditable }" #dateOfBirth="ngModel"
+                          [(ngModel)]="AddNewInterment.dob" name="dateOfBirth" id="dateOfBirth" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass:'theme-default' }"
+                          autocomplete="off" />
+                        <!-- <span class="input-group-addon" >
+                            <span class="fa fa-calendar"></span>
+                          </span> -->
+                      </div>
+                      <div class="alert alert-danger" *ngIf="dateOfBirth.invalid">This field is required must be valid date</div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="" id='datetimepicker1'>
+                      <label for="dateOfDeath"> Date of death </label>
+                      <div class="input-group">
+                        <input type='text' class="form-control bg-white date" [ngClass]="{'editableInputField': isIntermentFormEditable }" #dateOfDeath="ngModel"
+                          name="dateOfDeath" [(ngModel)]="AddNewInterment.dod" id="dateOfDeath" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass:'theme-default' }"
+                          autocomplete="off" />
+                        <!-- <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                          </span> -->
+                      </div>
+                      <div class="alert alert-danger" *ngIf="dateOfDeath.invalid">This field is required and must be valid date</div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="causeOfDeath">Cause of death </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }"
+                      #causeOfDeath="ngModel" [(ngModel)]="AddNewInterment.cause_of_death" name="causeOfDeath" id="causeOfDeath">
+                    <div class="alert alert-danger" *ngIf="causeOfDeath.invalid">This field is required</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="occupation">Occupation</label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }"
+                      #occupation="ngModel" [(ngModel)]="AddNewInterment.occupation" name="occupation" id="occupation">
+                    <div class="alert alert-danger" *ngIf="occupation.invalid">This field is required</div>
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <!-- <div class="col-md-6">
+                      <label for="nextOfKin"> Next of kin </label>
+                      <input type="text" class="form-control form-control-sm bg-white" #nextOfKin = "ngModel" [(ngModel)]="AddNewInterment.next_of_kin" name="nextOfKin" id="nextOfKin">
+                      <div class="alert alert-danger" *ngIf="nextOfKin.invalid">This field is required</div>
+                    </div> -->
+                  <div class="col-md-6">
+                    <label for="age"> Age </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isIntermentFormEditable }"
+                      #ageAdd="ngModel" [(ngModel)]="AddNewInterment.age" name="age" id="age">
+                    <div class="alert alert-danger" *ngIf="ageAdd.invalid">This field is required</div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="religion"> Religion </label>
+                    <!-- <input type="text" class="form-control form-control-sm bg-white" #religion = "ngModel" [(ngModel)]="AddNewInterment.religion" name="religion" id="religion" required> -->
+                    <select class="form-control form-control-sm" [ngClass]="{'editableInputField': isIntermentFormEditable }" #religion="ngModel"
+                      [(ngModel)]="AddNewInterment.religion" name="religion" id="religion">
+                      <option value="1"> Anglican </option>
+                      <option value="2"> Catholic </option>
+                      <option value="3"> Uniting </option>
+                      <option value="4"> Jehovah witness </option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="religion.invalid">This field is required</div>
+                  </div>
+
+                  <!-- <input type="text" class="form-control form-control-sm bg-white" #returnedServiceman = "ngModel" [(ngModel)]="AddNewInterment.returned_serviceman" name="returnedServiceman" id="returnedServiceman"> -->
+
+                  <div class="col-md-6">
+                    <label for="returnedServiceman"> Returned serviceman </label>
+                    <div class="form-control-sm">
+                      <label for="returnedServiceman" class="radio-inline">
+                        <input type="radio" name="returnedServiceman" [ngClass]="{'editableInputField': isIntermentFormEditable }" #returnedServiceman="ngModel"
+                          [value]="1" id="returnedServiceman" [(ngModel)]="AddNewInterment.returned_serviceman"> Yes
+                      </label>
+
+                      <label for="returnedServiceman" class="radio-inline">
+                        <input type="radio" name="returnedServiceman" [ngClass]="{'editableInputField': isIntermentFormEditable }" #returnedServiceman="ngModel"
+                          [value]="2" [(ngModel)]="AddNewInterment.returned_serviceman" id="returnedServiceman"> No
+                      </label>
+                    </div>
+                    <div class="alert alert-danger" *ngIf="returnedServiceman.invalid">This field is required</div>
+                  </div>
+                </div>
+
+                <!-- <hr class="mb-30">
+  
+                  <div class="row ">
+                    <div class="col-lg-12">
+                      <div class="mb-30">
+                        <label for="headStonePhoto" class="  p-0"> Linked files </label>
+                        <div class="form-group organiser-wrapper">
+                          <div class="">
+                            <div class="banner_photo">
+                              <div id="targetLayer3" class="organiser_photo">
+                                <img onclick="showSource();" class="icon-choose-image" [src]="imageUrl">
+                              </div>
+                              <div id="profileload" align="center" class="d-none">
+                                <img [src]="imageUrl">
+                              </div>
+                            </div>
+                          </div>
+                          <input type="hidden" name="profile_image" id="profile_image3" value="" class="form-control image-preview-filename">
+                          <div class="btn-browser">
+                            <input type="text" class="form-control image-preview-filename sm-input bg-white d-none" disabled="disabled" >
+                            <div class="flat-button image-preview-input">
+                              <span class="fa fa-folder-open font-grey"></span>
+                              <span class="image-preview-input-title font-grey" >Images, PDFs, other files </span>
+                              <input type="file" (change)="handleFileInput($event.target.files,'interment')" name="profile_file" id="profile_file">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div> -->
+                <div class="row">
+                  <div class="col-sm-12 pt-30 flex-align_center pb-30 ">
+                    <button type="button" class="flat-button" [disabled]="newintermentAddForm.invalid" (click)="addIntermentData(AddNewInterment)">Save</button>
+                    <button type="button" class="flat-button dismis" (click)="alert()">Cancel</button>
+                    <!-- SUCCESS MESSAGE AFTER ACTION -->
+                    <div class="alert" [ngClass]="{'alert-success' : successMessage.status == 200, 'alert-danger' : successMessage.status == 500}"
+                      style="text-align: center;" *ngIf="successMessage.message" [innerHtml]="successMessage.message"></div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ENDS OF ADD NEW INTERMENT -->
+
+  <!-- View/Edit/New Person -->
+  <div class="modal fade" id="NewPerson">
+    <div [hidden]="IsmodelShow" class="modal-dialog modal-lg title-modal">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <div class="Main-title_bg col">
+            <div class="col-xs-12">
+              <h2 class="text-center">Person</h2>
+            </div>
+          </div>
+          <button type="button" *ngIf="isPersonFormEditable; else predit" class="close dismis" (click)="alert()">&times;</button>
+          <ng-template #predit>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </ng-template>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body" style="padding-top:20px;">
+          <div class="gray_bg width-custom_800">
+
+            <div class="col-lg-12">
+              <div class="pull-right">
+                <h2>
+                  <label> PersonID:</label> {{personDataforview.person_id}}
+                </h2>
+              </div>
+            </div>
+
+            <div class="col-lg-12">
+              <form action="" method="post" #NewPersonForm="ngForm">
+
+                <!-- <div class="row">
+                    </div> -->
+
+                <div class="row">
+
+                  <div class="col-md-6">
+                    <label for="genderPer"> Gender </label>
+                    <select class="form-control form-control-sm" [ngClass]="{'editableInputField': isPersonFormEditable }" #genderPer="ngModel"
+                      [(ngModel)]="personDataforview.gender" name="genderPer" id="genderPer" [disabled]="!isPersonFormEditable">
+                      <option disabled selected> Select </option>
+                      <option value="1">Male</option>
+                      <option value="2">Female</option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="genderPer.invalid">This field is required</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="">
+                      <label for="titlePer"> Title </label>
+                      <input type="text" [(ngModel)]="personDataforview.title" [ngClass]="{'editableInputField': isPersonFormEditable }" #titlePer="ngModel"
+                        class="form-control form-control-sm bg-white" name="titlePer" id="titlePer" [disabled]="!isPersonFormEditable">
+                      <div class="alert alert-danger" *ngIf="titlePer.invalid">This field is required</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-4">
+                    <label for="first_namePer">First name </label>
+                    <input type="text" [(ngModel)]="personDataforview.first_name" [ngClass]="{'editableInputField': isPersonFormEditable }" #first_namePer="ngModel"
+                      class="form-control form-control-sm bg-white" name="first_namePer" id="first_namePer" [disabled]="!isPersonFormEditable"
+                      required>
+                    <div class="alert alert-danger" *ngIf="first_namePer.invalid">This field is required</div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <label for="middle_namePer"> Middle name </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isPersonFormEditable }"
+                      [(ngModel)]="personDataforview.middle_name" name="middle_namePer" id="middle_namePer" [disabled]="!isPersonFormEditable">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="surnamePer"> Surname </label>
+                    <input type="text" [(ngModel)]="personDataforview.surname" [ngClass]="{'editableInputField': isPersonFormEditable }" #surnamePer="ngModel"
+                      class="form-control form-control-sm bg-white" name="surnamePer" id="surnamePer" [disabled]="!isPersonFormEditable"
+                      required>
+                    <div class="alert alert-danger" *ngIf="surnamePer.invalid">This field is required</div>
+                  </div>
+                </div>
+                <hr class="mb-30">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="business_namePer"> Business name </label>
+                    <input type="text" [(ngModel)]="personDataforview.business_name" [ngClass]="{'editableInputField': isPersonFormEditable }"
+                      #business_namePer="ngModel" class="form-control form-control-sm bg-white" name="business_namePer" id="business_namePer"
+                      [disabled]="!isPersonFormEditable">
+                    <div class="alert alert-danger" *ngIf="business_namePer.invalid">This field is required</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="abnPer"> ABN </label>
+                    <input type="text" [(ngModel)]="personDataforview.ABN" [ngClass]="{'editableInputField': isPersonFormEditable }" #abnPer="ngModel"
+                      class="form-control form-control-sm bg-white" name="abnPer" id="abnPer" [disabled]="!isPersonFormEditable">
+                    <div class="alert alert-danger" *ngIf="abnPer.invalid">This field is required</div>
+                  </div>
+                </div>
+
+                <hr class="mb-30">
+                <h2 class="text-center subtitle">Home address</h2>
+
+                <!-- <div class="row">              
+                    <div class="col-md-12">
+                      <label for="primaryAddress"> Primary address  </label>
+                      <input type="text" class="form-control form-control-sm bg-white" name="primaryAddress" id="primaryAddress" [disabled]="!isPersonFormEditable">
+                    </div>
+                  </div> -->
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="streetPer"> Street </label>
+                    <input type="text" [(ngModel)]="personDataforview.pri_street" [ngClass]="{'editableInputField': isPersonFormEditable }" #streetPer="ngModel"
+                      class="form-control form-control-sm bg-white" name="streetPer" id="streetPer" [disabled]="!isPersonFormEditable">
+                    <div class="alert alert-danger" *ngIf="streetPer.invalid">This field is required</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="SuburbPer"> Suburb </label>
+                    <input type="text" [(ngModel)]="personDataforview.pri_suburb" [ngClass]="{'editableInputField': isPersonFormEditable }" #SuburbPer="ngModel"
+                      class="form-control form-control-sm bg-white" name="SuburbPer" id="SuburbPer" [disabled]="!isPersonFormEditable">
+                    <div class="alert alert-danger" *ngIf="SuburbPer.invalid">This field is required</div>
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="statePer"> State </label>
+                    <input type="text" [(ngModel)]="personDataforview.pri_state" [ngClass]="{'editableInputField': isPersonFormEditable }" #statePer="ngModel"
+                      class="form-control form-control-sm bg-white" name="statePer" id="statePer" [disabled]="!isPersonFormEditable">
+                    <div class="alert alert-danger" *ngIf="statePer.invalid">This field is required</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="countryPer"> Country </label>
+                    <input type="text" [(ngModel)]="personDataforview.pri_country" [ngClass]="{'editableInputField': isPersonFormEditable }"
+                      #countryPer="ngModel" class="form-control form-control-sm bg-white" name="countryPer" id="countryPer"
+                      [disabled]="!isPersonFormEditable">
+                    <div class="alert alert-danger" *ngIf="countryPer.invalid">This field is required</div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="pri_postcode"> Post code </label>
+                    <input type="text" [ngClass]="{'editableInputField': isPersonFormEditable }" [(ngModel)]="personDataforview.pri_postcode"
+                      #pripostPer="ngModel" class="form-control form-control-sm bg-white" name="pri_postcodePer" id="pri_postcodePer"
+                      [disabled]="!isPersonFormEditable">
+                    <div class="alert alert-danger" *ngIf="pripostPer.invalid">This field is required</div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <label> Is the postal address different ? </label>
+                    <div class="form-control-sm">
+                      <label for="PostalY" class="radio-inline">
+                        <input type="radio" [ngClass]="{'editableInputField': isPersonFormEditable }" [(ngModel)]="personDataforview.Postal" name="Postal"
+                          id="PostalY" [value]="1" [disabled]="!isPersonFormEditable"> Yes
+                      </label>
+                      <label for="PostalN" class="radio-inline">
+                        <input type="radio" [ngClass]="{'editableInputField': isPersonFormEditable }" [(ngModel)]="personDataforview.Postal" name="Postal"
+                          id="PostalN" [value]="2" [disabled]="!isPersonFormEditable" checked> No
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="postal PostalAddress" *ngIf="personDataforview.Postal == 1">
+                  <hr class="mb-30">
+                  <h2 class="text-center subtitle">Postal address</h2>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label for="post_streetPer"> Street </label>
+                      <input type="text" [(ngModel)]="personDataforview.pos_street" [ngClass]="{'editableInputField': isPersonFormEditable }" #post_streetPer="ngModel"
+                        class="form-control form-control-sm bg-white" name="post_streetPer" id="post_streetPer" [disabled]="!isPersonFormEditable">
+                      <div class="alert alert-danger" *ngIf="post_streetPer.invalid">This field is required</div>
+                    </div>
+
+
+                    <div class="col-md-6">
+                      <label for="post_suburbPer"> Suburb </label>
+                      <input type="text" [(ngModel)]="personDataforview.post_suburb" [ngClass]="{'editableInputField': isPersonFormEditable }"
+                        #post_suburbPer="ngModel" class="form-control form-control-sm bg-white" name="post_suburbPer" id="post_suburbPer"
+                        [disabled]="!isPersonFormEditable">
+                      <div class="alert alert-danger" *ngIf="post_suburbPer.invalid">This field is required</div>
+                    </div>
+
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label for="pos_statePer"> State </label>
+                      <input type="text" [(ngModel)]="personDataforview.pos_state" [ngClass]="{'editableInputField': isPersonFormEditable }" #pos_statePer="ngModel"
+                        class="form-control form-control-sm bg-white" name="pos_statePer" id="pos_statePer" [disabled]="!isPersonFormEditable">
+                      <div class="alert alert-danger" *ngIf="pos_statePer.invalid">This field is required</div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="pos_countryPer"> Country </label>
+                      <input type="text" [(ngModel)]="personDataforview.pos_country" [ngClass]="{'editableInputField': isPersonFormEditable }"
+                        #pos_countryPer="ngModel" class="form-control form-control-sm bg-white" name="pos_countryPer" id="pos_countryPer"
+                        [disabled]="!isPersonFormEditable">
+                      <div class="alert alert-danger" *ngIf="pos_statePer.invalid">This field is required</div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label for="pri_postcode"> Post code </label>
+                      <input type="text" [ngClass]="{'editableInputField': isPersonFormEditable }" [(ngModel)]="personDataforview.pos_postcode"
+                        #pospostPer="ngModel" class="form-control form-control-sm bg-white" name="pos_postcode" id="pos_postcode"
+                        [disabled]="!isPersonFormEditable">
+                      <div class="alert alert-danger" *ngIf="pospostPer.invalid">This field is required</div>
+                    </div>
+                  </div>
+                </div>
+                <hr class="mb-30">
+                <h2 class="text-center subtitle">Contact details</h2>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="phone_mobilePer"> Phone (mobile) </label>
+                    <input type="tel" [(ngModel)]="personDataforview.phone_mobile" [ngClass]="{'editableInputField': isPersonFormEditable }"
+                      #phone_mobilePer="ngModel" class="form-control form-control-sm bg-white" name="phone_mobilePer" id="phone_mobilePer"
+                      [disabled]="!isPersonFormEditable">
+                    <div class="alert alert-danger" *ngIf="phone_mobilePer.invalid">This field is required and must be valid</div>
+                  </div>
+                  <!-- pattern="^(\+\d{1,3}[- ]?)?\d{10}$" -->
+                  <div class="col-md-6">
+                    <label for="phone_homePer"> Phone (home) </label>
+                    <input type="text" [(ngModel)]="personDataforview.phone_home" [ngClass]="{'editableInputField': isPersonFormEditable }" #phone_homePer="ngModel"
+                      class="form-control form-control-sm bg-white" name="phone_homePer" id="phone_homePer" [disabled]="!isPersonFormEditable">
+                    <div class="alert alert-danger" *ngIf="phone_homePer.invalid">Must be in valid format</div>
+                  </div>
+
+                  <div class="col-md-12">
+                    <label for="phone_officePer"> Phone (office) </label>
+                    <input type="text" [(ngModel)]="personDataforview.phone_office" [ngClass]="{'editableInputField': isPersonFormEditable }"
+                      #phone_officePer="ngModel" class="form-control form-control-sm bg-white" name="phone_officePer" id="phone_officePer"
+                      [disabled]="!isPersonFormEditable">
+                    <div class="alert alert-danger" *ngIf="phone_officePer.invalid">Must be in valid format</div>
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="emailPer1"> Email (1) </label>
+                    <input type="email" class="form-control form-control-sm bg-white" [ngClass]="{'editableInputField': isPersonFormEditable }"
+                      [(ngModel)]="personDataforview.email1" #emailPer1="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                      name="emailPer1" id="emailPer1" [disabled]="!isPersonFormEditable">
+                    <div class="alert alert-danger" *ngIf="emailPer1.invalid">This field is required and must be valid Email Address</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="emailPer2"> Email (2) </label>
+                    <input type="email" [(ngModel)]="personDataforview.email2" [ngClass]="{'editableInputField': isPersonFormEditable }" #emailPer2="ngModel"
+                      class="form-control form-control-sm bg-white" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                      name="emailPer2" id="emailPer2" [disabled]="!isPersonFormEditable">
+                    <div class="alert alert-danger" *ngIf="emailPer2.invalid">Must be valid Email Address</div>
+                  </div>
+                </div>
+
+                <hr class="mb-30">
+                <h2 class="text-center subtitle">Personal details</h2>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="religionPer"> Religion </label>
+                    <!-- <input type="text" [(ngModel)]="personDataforview.religion" [ngClass]="{'editableInputField': isPersonFormEditable }" #religionPer = "ngModel" class="form-control form-control-sm bg-white" name="religionPer" id="religionPer" [disabled]="!isPersonFormEditable"> -->
+                    <select class="form-control form-control-sm" [(ngModel)]="personDataforview.religion" [ngClass]="{'editableInputField': isPersonFormEditable }"
+                      #religionPer="ngModel" class="form-control form-control-sm bg-white" name="religionPer" id="religionPer"
+                      [disabled]="!isPersonFormEditable">
+                      <option value="1"> Anglican </option>
+                      <option value="2"> Catholic </option>
+                      <option value="3"> Uniting </option>
+                      <option value="4"> Jehovah witness </option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="religionPer.invalid">This field is required</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label> Returned serviceman </label>
+                    <div class="form-control-sm">
+                      <label for="ReturnedServicemanY" *ngIf="personDataforview.returned_serviceman ==  1;else rsr" class="radio-inline">
+                        <input type="radio" name="ReturnedServiceman" [(ngModel)]="personDataforview.returned_serviceman" id="ReturnedServicemanY"
+                          checked [value]="1" [disabled]="!isPersonFormEditable"> Yes
+                      </label>
+                      <ng-template #rsr>
+                        <label for="ReturnedServicemanY" class="radio-inline">
+                          <input type="radio" name="ReturnedServiceman" [(ngModel)]="personDataforview.returned_serviceman" id="ReturnedServicemanY"
+                            [value]="1" [disabled]="!isPersonFormEditable"> Yes
+                        </label>
+                      </ng-template>
+                      <label for="ReturnedServicemanN" *ngIf="personDataforview.returned_serviceman ==  2;else rsr1" class="radio-inline">
+                        <input type="radio" name="ReturnedServiceman" [(ngModel)]="personDataforview.returned_serviceman" id="ReturnedServicemanN"
+                          checked [value]="2" [disabled]="!isPersonFormEditable"> No
+                      </label>
+                      <ng-template #rsr1>
+                        <label for="ReturnedServicemanY" class="radio-inline">
+                          <input type="radio" name="ReturnedServiceman" [(ngModel)]="personDataforview.returned_serviceman" id="ReturnedServicemanY"
+                            [value]="2" [disabled]="!isPersonFormEditable"> No
+                        </label>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="" id='datetimepicker1'>
+                      <label for="dateOfBirthPer"> Date of birth </label>
+                      <div class="input-group">
+                        <input type='text' [(ngModel)]="personDataforview.dob" [ngClass]="{'editableInputField': isPersonFormEditable }" #dateOfBirthPer="ngModel"
+                          class="form-control bg-white date" name="dateOfBirthPer" id="dateOfBirthPer" [disabled]="!isPersonFormEditable"
+                          bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass:'theme-default' }" autocomplete="off">
+                        <!-- <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                          </span> -->
+                      </div>
+                      <div class="alert alert-danger" *ngIf="dateOfBirthPer.invalid">This field is required and must be valid date</div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="" id='datetimepicker1'>
+                      <label for="dateOfDeathPer"> Date of death </label>
+                      <div class="input-group">
+                        <input type='text' [(ngModel)]="personDataforview.dod" [ngClass]="{'editableInputField': isPersonFormEditable }" #dateOfDeathPer="ngModel"
+                          class="form-control bg-white date" name="dateOfDeathPer" id="dateOfDeathPer" [disabled]="!isPersonFormEditable"
+                          bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass:'theme-default' }" autocomplete="off"
+                        />
+                        <!-- <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                          </span> -->
+                        <div class="alert alert-danger" *ngIf="dateOfDeathPer.invalid">This field is required and must be valid date</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="cause_of_deathPer">Cause of death </label>
+                    <input type="text" [(ngModel)]="personDataforview.cause_of_death" [ngClass]="{'editableInputField': isPersonFormEditable }"
+                      #cause_of_deathPer="ngModel" class="form-control form-control-sm bg-white" name="cause_of_deathPer" id="cause_of_deathPer"
+                      [disabled]="!isPersonFormEditable">
+                    <div class="alert alert-danger" *ngIf="cause_of_deathPer.invalid">This field is required</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="occupationPer">Occupation</label>
+                    <input type="text" [(ngModel)]="personDataforview.occupation" [ngClass]="{'editableInputField': isPersonFormEditable }" #occupationPer="ngModel"
+                      class="form-control form-control-sm bg-white" name="occupationPer" id="occupationPer" [disabled]="!isPersonFormEditable">
+                    <div class="alert alert-danger" *ngIf="occupationPer.invalid">This field is required</div>
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="next_of_kin"> Next of kin </label>
+                    <input type="text" [(ngModel)]="personDataforview.next_of_kin" [ngClass]="{'editableInputField': isPersonFormEditable }"
+                      #next_of_kin="ngModel" class="form-control form-control-sm bg-white" name="next_of_kin" id="next_of_kin"
+                      [disabled]="!isPersonFormEditable">
+                    <div class="alert alert-danger" *ngIf="next_of_kin.invalid">This field is required</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="age"> Age </label>
+                    <input type="text" [(ngModel)]="personDataforview.age" [ngClass]="{'editableInputField': isPersonFormEditable }" #agee="ngModel"
+                      class="form-control form-control-sm bg-white" name="age" id="next_of_kin" [disabled]="!isPersonFormEditable">
+                    <div class="alert alert-danger" *ngIf="agee.invalid">This field is required</div>
+                  </div>
+
+                  <!-- <div class="col-md-6 flex-align_center">
+                      <button type="button" class="flat-button" data-keyboard="false" data-backdrop="static" data-toggle="modal" data-target="#NewPerson"><i class="fa fa-eye"></i> View </button>
+                      <button type="button" class="flat-button"><i class="fa fa-pencil"></i> Edit </button>
+                      <button type="button" class="flat-button">New </button>
+                    </div> -->
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <label for="commentsPer"> Comments </label>
+                    <textarea class="form-control bg-white" rows="3" [ngClass]="{'editableInputField': isPersonFormEditable }" #commentsPer="ngModel"
+                      [(ngModel)]="personDataforview.comments" name="commentsPer" id="commentsPer" [disabled]="!isPersonFormEditable"></textarea>
+                    <div class="alert alert-danger" *ngIf="commentsPer.invalid">This field is required</div>
+                  </div>
+
+                </div>
+
+                <hr class="mb-30">
+
+                <!-- <div class="row ">
+                    <div class="col-lg-12">
+                      <div class="mb-30">
+                        <label for="headStonePhoto" class="  p-0"> Linked files </label>
+                        <div class="form-group organiser-wrapper">
+                          <div class="">
+                            <div class="banner_photo">
+                              <div id="targetLayer2" class="organiser_photo">
+                                <img onclick="showSource();" class="icon-choose-image" src="./assets/img/default.jpg">
+                              </div>
+                              <div id="profileload" align="center" class="d-none">
+                                <img src="./assets/img/ajax-loader.gif">
+                              </div>
+                            </div>
+                          </div>
+                          <input type="hidden" name="profile_image" id="profile_image2" value="" class="form-control image-preview-filename">
+                          <div class="btn-browser">
+                            <input type="text" class="form-control image-preview-filename sm-input bg-white d-none" disabled="disabled">
+                              <div class="flat-button image-preview-input">
+                                <span class="fa fa-folder-open font-grey"></span>
+                                <span class="image-preview-input-title font-grey" > Display Image Or Edit Image Or Add Image </span>
+                                <input type="text" [(ngModel)]="personDataforview.headstone_image" onchange="showPreview(this, 'targetLayer2');" accept="image/png, image/jpeg, image/gif" name="headstone_image" id="headstone_image" [disabled]="!isPersonFormEditable">
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div> -->
+
+
+                <div class="row">
+                  <div class="col-sm-12 pt-30 flex-align_center pb-30 ">
+                    <button type="button" class="flat-button" *ngIf="!isPersonFormEditable" (click)="isPersonFormEditable = true">
+                      <i class="fa fa-pencil"></i> Edit</button>
+                    <button type="button" class="flat-button" [disabled]="!NewPersonForm.valid" *ngIf="isPersonFormEditable" (click)="UpdatePersonData(personDataforview)">Save</button>
+
+                    <button type="button" class="flat-button dismis" *ngIf="isPersonFormEditable;else popo" (click)="alert()">Cancel</button>
+                    <ng-template #popo>
+                      <button type="button" class="flat-button" data-dismiss="modal">Cancel</button>
+                    </ng-template>
+                    <!-- SUCCESS MESSAGE AFTER ACTION -->
+                    <div class="alert" [ngClass]="{'alert-success' : successMessage.status == 200, 'alert-danger' : successMessage.status == 500}"
+                      style="text-align: center;" *ngIf="successMessage.message" [innerHtml]="successMessage.message"></div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL FOR ADD NEW PERSON -->
+  <div class="modal fade" id="addNewPerson">
+    <div class="modal-dialog modal-lg title-modal">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <div class="Main-title_bg col">
+            <div class="col-xs-12">
+              <h2 class="text-center">
+                <i class="fa fa-user-plus"></i> Add new person</h2>
+            </div>
+          </div>
+          <button #btnClose type="button" id="test" class="close dismis" (click)="alert()">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body" style="padding-top:20px;">
+          <div class="gray_bg width-custom_800">
+            <div class="col-lg-12">
+              <form action="" method="post" name="AddNewPersonForm" #insertNewPerson="ngForm">
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="gender"> Gender </label>
+                    <select class="form-control form-control-sm editableInputField" #gendera="ngModel" [(ngModel)]="AddNewPerson.gender" name="gender"
+                      id="gender">
+                      <option disabled selected> Select </option>
+                      <option value="1">Male</option>
+                      <option value="2">Female</option>
+                    </select>
+                    <input type="hidden" class="form-control form-control-sm bg-white" [(ngModel)]="AddNewPerson.rid" value="{{AddNewPerson.rid}}"
+                      name="rid" id="rid">
+                    <input type="hidden" class="form-control form-control-sm bg-white" [(ngModel)]="AddNewPerson.cemetery_id" value="{{AddNewPerson.cemetery_id}}"
+                      name="cemetery_id" id="cemetery_id">
+
+                    <div class="alert alert-danger" *ngIf="gendera.invalid">This field is required</div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="">
+                      <label for="title"> Title </label>
+                      <input type="text" [(ngModel)]="AddNewPerson.title" #titlea="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                        name="title" id="title">
+                      <div class="alert alert-danger" *ngIf="titlea.invalid">This field is required</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-4">
+                    <label for="first_name">First name </label>
+                    <input type="text" [(ngModel)]="AddNewPerson.first_name" #first_namea="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                      name="first_name" id="first_name" required>
+                    <div class="alert alert-danger" *ngIf="first_namea.invalid">This field is required</div>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="middle_name"> Middle name </label>
+                    <input type="text" class="form-control form-control-sm bg-white editableInputField" [(ngModel)]="AddNewPerson.middle_name"
+                      name="middle_name" id="middle_name">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="surname"> Surname </label>
+                    <input type="text" [(ngModel)]="AddNewPerson.surname" #surnamea="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                      name="surname" id="surname" required>
+                    <div class="alert alert-danger" *ngIf="surnamea.invalid">This field is required</div>
+                  </div>
+                </div>
+                <hr class="mb-30">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="business_name"> Business name </label>
+                    <input type="text" [(ngModel)]="AddNewPerson.business_name" #business_namea="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                      name="business_name" id="business_name">
+                    <div class="alert alert-danger" *ngIf="business_namea.invalid">This field is required</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="abn"> ABN </label>
+                    <input type="text" [(ngModel)]="AddNewPerson.ABN" #abna="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                      name="abn" id="abn">
+                    <div class="alert alert-danger" *ngIf="abna.invalid">This field is required</div>
+                  </div>
+                </div>
+                <hr class="mb-30">
+                <h2 class="text-center subtitle">Home address</h2>
+
+                <!-- <div class="row">              
+                    <div class="col-md-12">
+                      <label for="primaryAddress"> Primary address  </label>
+                      <input type="text" class="form-control form-control-sm bg-white" name="primaryAddress" id="primaryAddress">
+                    </div>
+                  </div> -->
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="street"> Street </label>
+                    <input type="text" [(ngModel)]="AddNewPerson.pri_street" #streeta="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                      name="street" id="street">
+                    <div class="alert alert-danger" *ngIf="streeta.invalid">This field is required</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="Suburb"> Suburb </label>
+                    <input type="text" [(ngModel)]="AddNewPerson.pri_suburb" #Suburba="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                      name="Suburb" id="Suburb">
+                    <div class="alert alert-danger" *ngIf="Suburba.invalid">This field is required</div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="state"> State </label>
+                    <input type="text" [(ngModel)]="AddNewPerson.pri_state" #statea="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                      name="state" id="state">
+                    <div class="alert alert-danger" *ngIf="statea.invalid">This field is required</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="country"> Country </label>
+                    <input type="text" [(ngModel)]="AddNewPerson.pri_country" #pcountrya="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                      name="country" id="country">
+                    <div class="alert alert-danger" *ngIf="pcountrya.invalid">This field is required</div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="pri_postcode"> Post code </label>
+                    <input type="text" [(ngModel)]="AddNewPerson.pri_postcode" #pripost="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                      name="pri_postcode" id="pri_postcode">
+                    <div class="alert alert-danger" *ngIf="pripost.invalid">This field is required</div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <label> Is the postal address different ? </label>
+                    <div class="form-control-sm">
+                      <label for="PostalY" class="radio-inline">
+                        <input type="radio" [value]="1" [(ngModel)]="AddNewPerson.Postal" name="Postal" id="PostalY"> Yes
+                      </label>
+                      <label for="PostalN" class="radio-inline">
+                        <input type="radio" name="Postal" [value]="2" [(ngModel)]="AddNewPerson.Postal" id="PostalN" checked> No
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="postal PostalAddress" *ngIf="AddNewPerson.Postal == 1">
+                  <hr class="mb-30">
+                  <h2 class="text-center subtitle">Postal address</h2>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label for="post_street"> Street </label>
+                      <input type="text" [(ngModel)]="AddNewPerson.pos_street" #post_streeta="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                        name="post_street" id="post_street">
+                      <div class="alert alert-danger" *ngIf="post_streeta.invalid">This field is required</div>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="post_suburb"> Suburb </label>
+                      <input type="text" [(ngModel)]="AddNewPerson.post_suburb" #post_suburba="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                        name="post_suburb" id="post_suburb">
+                      <div class="alert alert-danger" *ngIf="post_suburba.invalid">This field is required</div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label for="pos_state"> State </label>
+                      <input type="text" [(ngModel)]="AddNewPerson.pos_state" #pos_statea="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                        name="pos_state" id="pos_state">
+                      <div class="alert alert-danger" *ngIf="pos_statea.invalid">This field is required</div>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="pos-country"> Country </label>
+                      <input type="text" [(ngModel)]="AddNewPerson.pos_country" #countrya="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                        name="pos-country" id="pos-country">
+                      <div class="alert alert-danger" *ngIf="countrya.invalid">This field is required</div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label for="pri_postcode"> Post code </label>
+                      <input type="text" [(ngModel)]="AddNewPerson.pos_postcode" #pospost="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                        name="pos_postcode" id="pos_postcode">
+                      <div class="alert alert-danger" *ngIf="pospost.invalid">This field is required</div>
+                    </div>
+                  </div>
+                </div>
+                <hr class="mb-30">
+                <h2 class="text-center subtitle">Contact details</h2>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="phone_mobile"> Phone (mobile) </label>
+                    <input type="tel" [(ngModel)]="AddNewPerson.phone_mobile" #phone_mobilea="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                      name="phone_mobile" id="phone_mobile">
+                    <div class="alert alert-danger" *ngIf="phone_mobilea.invalid">This field is required and must be valid</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="phone_home"> Phone (home) </label>
+                    <input type="text" [(ngModel)]="AddNewPerson.phone_home" #phone_homea="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                      name="phone_home" id="phone_home">
+                    <div class="alert alert-danger" *ngIf="phone_homea.invalid">Must be in valid format</div>
+                  </div>
+                  <div class="col-md-12">
+                    <label for="phone_office"> Phone (office) </label>
+                    <input type="text" [(ngModel)]="AddNewPerson.phone_office" #phone_officea="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                      name="phone_office" id="phone_office">
+                    <div class="alert alert-danger" *ngIf="phone_officea.invalid">Must be in valid format</div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="rightOfInterment"> Email (1) </label>
+                    <input type="email" [(ngModel)]="AddNewPerson.email1" class="form-control form-control-sm bg-white editableInputField" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                      #email1a="ngModel" name="rightOfInterment" id="rightOfInterment">
+                    <div class="alert alert-danger" *ngIf="email1a.invalid">This field is required and must be valid Email address</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="email1"> Email (2) </label>
+                    <input type="email" [(ngModel)]="AddNewPerson.email2" #email2a="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                      pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" name="email1" id="email1">
+                    <div class="alert alert-danger" *ngIf="email2a.invalid">Must be valid Email Address</div>
+                  </div>
+                </div>
+
+                <hr class="mb-30">
+                <h2 class="text-center subtitle">Personal details</h2>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="religion"> Religion </label>
+                    <!-- <input type="text" [(ngModel)]="AddNewPerson.religion" #religiona = "ngModel" class="form-control form-control-sm bg-white" name="religion" id="religion" > -->
+                    <select class="form-control form-control-sm editableInputField" [(ngModel)]="AddNewPerson.religion" #religiona="ngModel"
+                      name="religion" id="religion">
+                      <option value="1"> Anglican </option>
+                      <option value="2"> Catholic </option>
+                      <option value="3"> Uniting </option>
+                      <option value="4"> Jehovah witness </option>
+                    </select>
+                    <div class="alert alert-danger" *ngIf="religiona.invalid">This field is required</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label> Returned serviceman </label>
+                    <div class="form-control-sm">
+                      <label for="ReturnedServicemanY" class="radio-inline">
+                        <input type="radio" name="ReturnedServiceman" [value]="1" id="ReturnedServicemanY" [(ngModel)]="AddNewPerson.returned_serviceman"> Yes
+                      </label>
+                      <label for="ReturnedServicemanN" class="radio-inline">
+                        <input type="radio" name="ReturnedServiceman" [value]="2" id="ReturnedServicemanN" [(ngModel)]="AddNewPerson.returned_serviceman"> No
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="" id='datetimepicker1'>
+                      <label for="dateOfBirth"> Date of birth </label>
+                      <div class="input-group">
+                        <input type='text' [(ngModel)]="AddNewPerson.dob" #dateOfBirtha="ngModel" class="form-control bg-white date editableInputField"
+                          name="dateOfBirth" id="dateOfBirth" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass:'theme-default' }"
+                          autocomplete="off" />
+                        <div class="alert alert-danger" *ngIf="dateOfBirtha.invalid">This field is required and must be valid date</div>
+                        <!-- <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                          </span> -->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="" id='datetimepicker1'>
+                      <label for="dateOfDeath"> Date of death </label>
+                      <div class="input-group">
+                        <input type='text' [(ngModel)]="AddNewPerson.dod" #dateOfDeatha="ngModel" class="form-control bg-white date editableInputField"
+                          name="dateOfDeath" id="dateOfDeath" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass:'theme-default' }"
+                          autocomplete="off" />
+                        <div class="alert alert-danger" *ngIf="dateOfDeatha.invalid">This field is required and must be valid date</div>
+                        <!-- <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                          </span> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="cause_of_death">Cause of death </label>
+                    <input type="text" [(ngModel)]="AddNewPerson.cause_of_death" #cause_of_deatha="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                      name="cause_of_death" id="cause_of_death">
+                    <div class="alert alert-danger" *ngIf="cause_of_deatha.invalid">This field is required and must be valid date</div>
+                  </div>
+                  <!-- pattern="^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$" -->
+                  <div class="col-md-6">
+                    <label for="occupation">Occupation</label>
+                    <input type="email" [(ngModel)]="AddNewPerson.occupation" #occupationa="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                      name="occupation" id="occupation">
+                    <div class="alert alert-danger" *ngIf="occupationa.invalid">This field is required</div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="next_of_kin"> Next of kin </label>
+                    <input type="text" [(ngModel)]="AddNewPerson.next_of_kin" #next_of_kina="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                      name="next_of_kin" id="next_of_kin">
+                    <div class="alert alert-danger" *ngIf="next_of_kina.invalid">This field is required</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="age"> Age </label>
+                    <input type="text" [(ngModel)]="AddNewPerson.age" #agea="ngModel" class="form-control form-control-sm bg-white editableInputField"
+                      name="age" id="age">
+                    <div class="alert alert-danger" *ngIf="agea.invalid">This field is required</div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <label for="comments"> Comments </label>
+                    <textarea class="form-control bg-white editableInputField" rows="3" #commentsa="ngModel" [(ngModel)]="AddNewPerson.comments"
+                      name="comments" id="comments"></textarea>
+                    <div class="alert alert-danger" *ngIf="commentsa.invalid">This field is required</div>
+                  </div>
+                </div>
+
+                <hr class="mb-30">
+                <!-- <div class="row ">
+                    <div class="col-lg-12">
+                      <div class="mb-30">
+                        <label for="headStonePhoto" class="  p-0"> Linked files </label>
+                        <div class="form-group organiser-wrapper">
+                          <div class="">
+                            <div class="banner_photo">
+                              <div id="targetLayer2" class="organiser_photo">
+                                <img onclick="showSource();" class="icon-choose-image" src="./assets/img/default.jpg">
+                              </div>
+                              <div id="profileload" align="center" class="d-none">
+                                <img src="./assets/img/ajax-loader.gif">
+                              </div>
+                            </div>
+                          </div>
+                          <input type="hidden" name="profile_image" id="profile_image2" value="" class="form-control image-preview-filename">
+                          <div class="btn-browser">
+                            <input type="text" class="form-control image-preview-filename sm-input bg-white d-none" disabled="disabled">
+                              <div class="flat-button image-preview-input">
+                                <span class="fa fa-folder-open font-grey"></span>
+                                <span class="image-preview-input-title font-grey" > Display Image Or Edit Image Or Add Image </span>
+                                <input type="text" [(ngModel)]="AddNewPerson.headstone_image" onchange="showPreview(this, 'targetLayer2');" accept="image/png, image/jpeg, image/gif" name="headstone_image" id="headstone_image">
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div> -->
+
+                <div class="row">
+                  <div class="col-sm-12 pt-30 flex-align_center pb-30 ">
+                    <button type="button" class="flat-button" [disabled]="!insertNewPerson.valid" (click)="addNewPersonData(AddNewPerson,dataFor,AddNewPerson.cemetery_id)">Save</button>
+                    <button type="button" class="flat-button dismis" (click)="alert()">Cancel</button>
+                    <!-- SUCCESS MESSAGE AFTER ACTION -->
+                    <div class="alert" [ngClass]="{'alert-success' : successMessage.status == 200, 'alert-danger' : successMessage.status == 500}"
+                      style="text-align: center;" *ngIf="successMessage.message" [innerHtml]="successMessage.message"></div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ENDS OF ADD NEW PERSON MODAL-->
+
+  <!-- START MODAL FOR ADD INTERRESTED RIGHT INTERMENT  -->
+  <div class="modal fade" id="addNewInterRightInterment">
+    <div class="modal-dialog modal-lg title-modal">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <div class="Main-title_bg col">
+            <div class="col-xs-12">
+              <h2 class="text-center">
+                <i class="fa fa-plus"></i> Add new interrest right interment</h2>
+            </div>
+          </div>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body" style="padding-top:20px;">
+          <div class="gray_bg width-custom_800">
+
+            <div class="col-lg-12">
+              <form action="" method="post">
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="interested_person"> Interested person </label>
+                    <input type="text" class="form-control form-control-sm bg-white" [(ngModel)]="addNewInterRightInterment.interested_person"
+                      name="interested_person" id="interested_person">
+                  </div>
+                  <div class="col-md-6">
+                    <div class="">
+                      <label for="date_enquiry"> Date enquiry </label>
+                      <input type="text" [(ngModel)]="addNewInterRightInterment.date_enquiry" class="form-control form-control-sm bg-white" name="date_enquiry"
+                        id="date_enquiry">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <label for="comments"> Comments </label>
+                    <textarea class="form-control bg-white" rows="3" [(ngModel)]="addNewInterRightInterment.comments" name="comments" id="comments"></textarea>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-12 pt-30 flex-align_center pb-30 ">
+                    <button type="button" class="flat-button" (click)="addNewInterRightIntermentData(addNewInterRightInterment)">Save</button>
+                    <button type="button" class="flat-button" data-dismiss="modal">Cancel</button>
+                    <!-- SUCCESS MESSAGE AFTER ACTION -->
+                    <div class="alert" [ngClass]="{'alert-success' : successMessage.status == 200, 'alert-danger' : successMessage.status == 500}"
+                      style="text-align: center;" *ngIf="successMessage.message" [innerHtml]="successMessage.message"></div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ENDS OF MODAL FOR ADD INTERRESTED RIGHT INTERMENT  -->
+
+</div>
+<style>
+.image-preview-input a {
+  color:#fff;
+}
+.image-preview-input a:hover {
+  color:#2196f3;
+}
+.mt-30 {
+  margin-top:30px !important;
+}
+</style>

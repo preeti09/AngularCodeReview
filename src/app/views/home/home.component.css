@@ -1,0 +1,405 @@
+/**
+  * Name: ListAny
+  * Version: 1.0
+  * Author: Themesflat
+  * Author URI: http://www.themesflat.com
+*/
+
+@import url("https://fonts.googleapis.com/css?family=Nunito:Nunito:300,300i,400,400i,600,600i,700,700i,800,800i,900|Poppins:300,400,500,600,700|Raleway:400,500,600,700");
+
+.widget-form .filter-form p input {
+	background-color: #FFF;
+	box-shadow: 1px 2px 5px 0px rgba(0, 0, 0, 0.1);
+	margin-bottom: 0;
+}
+div button {
+	border-radius: 20px;	
+	padding: 11px 34px;
+	font-size: 12px;
+}
+/* Page title
+-------------------------------------------------------------- */
+.page-title-heading h1 {	
+    color: #ffffff;
+}
+
+/* Footer
+-------------------------------------------------------------- */
+footer {
+    background-color: #252525;
+   /* padding: 69px 0 25px;*/
+    color: #646464;    
+}
+
+footer a, footer p, .bottom .copyright a:hover {
+	color: #9c9c9c;
+}
+
+footer a:hover {
+	color: #2196f3;
+}
+
+.effect {
+	display: block;
+	position: relative;
+	overflow: hidden;
+}
+
+.effect:before {
+	background: #fff;
+    content: "";
+    height: 300px;
+    left: -150px;
+    opacity: .2;
+    position: absolute;
+    top: -50px;
+    -webkit-transform: rotate(35deg);
+    transform: rotate(35deg);
+    -webkit-transition: all 1000ms cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 1000ms cubic-bezier(0.19, 1, 0.22, 1);
+    width: 25px;
+    z-index: 10;
+}
+
+.effect:hover:before {
+    left: 130%;
+    -webkit-transition: all 1000ms cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 1000ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+
+/* Bottom
+-------------------------------------------------------------- */
+.bottom {
+	border-top: 1px solid #343434;	
+	padding-top:15px;
+	/*margin-top: 74px;*/
+}
+
+.bottom .copyright {
+    padding-top: 8px;
+    margin-left: -2px;
+    letter-spacing: 0.7px;
+    text-align: center;
+}
+
+.bottom .copyright a {
+	color: #2196f3;
+	font-weight: 600;
+}
+
+/* Preload
+-------------------------------------------------------------- */
+.loading-overlay {
+    background: #FFF;
+    color: #424242;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999999;
+}
+
+.loader, .loader:after {    
+    width: 30px;
+    height: 30px;
+}
+
+.Loading-Page {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: -20px 0px 0px -20px;
+}
+
+.loader {
+    margin: 20% auto;
+    border-radius: 50%;
+    font-size: 6px;
+    position: relative;
+    text-indent: -9999em;
+    border-top: 1.1em solid rgba(194, 193, 193, 0.5);
+    border-right: 1.1em solid rgba(199, 197, 197, 0.5);
+    border-bottom: 1.1em solid rgba(203, 203, 203, 0.5);
+    border-left: 1em solid #2196f3;
+    -webkit-animation: fa-spin 2s infinite linear;
+           animation: fa-spin 2s infinite linear;     
+}
+
+
+/* All Mobile Sizes */
+@media only screen and (max-width: 767px) {
+	.flat-contact-form .input-wrap.name, .flat-contact-form .input-wrap.email {
+		width: 100%;
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	
+}
+
+/* Mobile Landscape Size */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+
+	.bottom .copyright {
+		margin-bottom: 15px;
+	}
+}
+
+/* Mobile Portrait Size */
+@media only screen and (max-width: 479px) {
+
+	.listing-user ul.wrap-button {
+	    text-align: left;
+	    padding: 0px 0px 0px 5px;
+	    float: left!important;
+	}
+
+	.flat-select .one-three {
+		margin-bottom: 15px;
+	}
+
+	.fancybox-opened {
+	    z-index: 999999;
+	}
+}
+
+.flat-product .rate-product .info-product a:hover i {
+    color: #FFF;
+}
+
+.flat-row,.flat-button, .title-section, .title-section .title,.wrap-form, .flat-download button i, .flat-product .featured-product, .flat-product .rate-product .info-product,
+.flat-client .client, .effect-button, .fancybox, .textbox .text-header, .flat-team .avatar {
+    position: relative;
+}
+
+.flat-product .featured-product .time, .flat-product .rate-product .heart  {
+    background: #2196f3;
+}
+
+.flat-tabs ul.menu-tab li, .listing-list .flat-product,.iconbox .box-header,.flat-product .featured-product img,
+.iconbox, .iconbox .box-header i, .iconbox .box-content .box-title, .fancybox:before,.client .featured-client:before,
+.flat-team .content-team,.flat-team .social-links, .flat-pricing .pricing-box .flat-value, .flat-pricing .pricing-box, .flat-pricing {
+    -webkit-transition: all 0.3s ease-in-out;
+       -moz-transition: all 0.3s ease-in-out;
+        -ms-transition: all 0.3s ease-in-out;
+         -o-transition: all 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
+}
+
+/* Flat button
+-------------------------------------------------------------- */
+.flat-button {
+    padding: 10px;
+    background-color: transparent;
+    font-size: 14px;
+    box-shadow: 0 0 0 2px #2196f3;
+    font-weight:normal;
+    display: inline-block;
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+    z-index: 1;
+    -webkit-border-radius: 10px;
+            border-radius: 10px;
+    -webkit-transition: color 0.3s;
+       -moz-transition: color 0.3s;
+            transition: color 0.3s;
+    border: none;
+}
+
+.effect-button {
+    background-color: transparent;
+    box-shadow: 0 0 0 2px #2196f3;
+     z-index: 1;
+    -webkit-transition: color 0.3s;
+       -moz-transition: color 0.3s;
+            transition: color 0.3s;
+}
+
+.flat-button:hover, .effect-button:hover {
+    color: #2196f3;
+}
+
+.flat-button:before {
+    -webkit-border-radius:10px;
+            border-radius:10px;
+}
+
+.flat-button:before, .effect-button:before {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    padding: 2px;
+    width: 100%;
+    height: 100%;
+    content: '';
+    z-index: -1;
+    background: #2196f3;
+    transition: transform 0.2s, opacity 0.2s;
+    -webkit-transition: -webkit-transform 0.2s, opacity 0.2s;
+    -moz-transition: -moz-transform 0.2s, opacity 0.2s;
+    pointer-events: none;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    border: none;
+}
+
+.flat-button:hover:before, .effect-button:hover:before  {
+    -webkit-transform: scale(0);
+       -moz-transform: scale(0);
+        -ms-transform: scale(0);
+            transform: scale(0);
+    opacity: 0;
+    -webkit-transition: -webkit-transform 0.4s, opacity 0.2s;
+       -moz-transition: -moz-transform 0.4s, opacity 0.2s;
+            transition: transform 0.4s, opacity 0.2s;
+    border: none;
+}
+.flat-button:active{
+    border: none;
+}
+.flat-button:focus{
+    outline: 0;
+}
+/* Row
+-------------------------------------------------------------- */
+.flat-row {
+	clear: both;
+    display: block;
+    padding: 56px 0 55px;    
+}
+
+.flat-row.v1 {
+    padding: 93px 0px 79px;
+}
+
+section.flat-row.section-product {
+    padding: 95px 0px 63px;
+}
+
+.bg-theme {
+    background-color: #F7F7F7;
+}
+
+.bg-red {
+    background-color: #2196f3;
+}
+
+/* Title-section 
+--------------------------------------------------------*/
+.title-section  {
+    margin-bottom: 32px;
+}
+
+.title-section .title { 
+    margin-bottom: 13px;
+}
+
+.title-section.style2 {
+    margin-bottom: 64px;
+}
+
+.title-section.style2 .title:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -14px;
+    width: 35px;
+    height: 1px;
+    background-color: #333333;
+}
+
+.title-section .sub-title {
+    font-size: 16px;
+    line-height: 22px;
+    color: #666666;
+}
+
+/* Flat Product
+-------------------------------------------------------------- */
+.section-product .title-section {
+    margin-bottom: 57px;
+}
+.section-product .title-section .title {
+    margin-bottom: 19px;
+}
+
+.title-section .sub-title {
+    font-weight: 300;
+    font-size: 20px;    
+}
+
+
+.flat-product {
+	position: relative;
+	border: 1px solid #dbdbdb;
+	min-height: 150px;
+    padding: 7px 4px;
+    margin-bottom: 29px;
+    background-color: #d5dbdc;
+}
+.pos-absol {
+	position: absolute;
+}
+.flat-product .pos-absol { 
+	bottom:15px;
+	left: 0;
+	right: 0;
+}
+
+.flat-product .rate-product .info-product, .flat-product .rate-product .info-product a, .flat-product .rate-product .review {
+    color: #fff;
+}
+
+.flat-product .rate-product .info-product h6 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.flat-product .rate-product .info-product p {
+    font-weight: 300;
+}
+
+.flat-product .content-product {
+    padding:10px;
+}
+
+.flat-product .content-product .tm {
+    float: left;
+    margin-right: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    background-color: #f1c407;
+}
+
+.flat-product .content-product p {
+    color: #777;
+    line-height: 20.5px;
+    margin :5px;
+}
+
+
+@media only screen and (min-width:768) {
+  header#header .row {
+    flex-wrap: nowrap;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .btn-menu {
+    display: block;
+  }
+
+  .nav-wrap.navbar-collapse {
+    position: absolute;
+    z-index: 99999;
+    background: rgb(52, 46, 74);
+    left: 0px;
+    right: 0px;
+    padding: 0px 15px;
+  }
+}

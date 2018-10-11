@@ -1,0 +1,34 @@
+<div class="card m-auto  cemeteryOwnerAdd">
+  <div class="card-body">
+    <form *ngIf="userAddForm" [formGroup]="userAddForm" (ngSubmit)="update($event)">
+      <div class="form-group row">
+        <label for="cemeteryName" class="col-sm-4 col-form-label ">Cemetery Name </label>
+        <div class="col-sm-8">
+          <input type="text" name="cemeteryName" class="form-control col-md-12 " formControlName="cemeteryName" id="cemeteryName" [(ngModel)]="user.name"
+            placeholder="Cemetery  name">
+        </div>
+      </div>
+      <input type="hidden" formControlName="id" name="id" id="id" [(ngModel)]="user.cemeteryid">
+
+      <div class="form-group row">
+        <label for="cemeteryLocation" class="col-sm-4 col-form-label ">Location </label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control col-md-12 " formControlName="cemeteryLocation" name="cemeteryLocation" id="cemeteryLocation"
+            [(ngModel)]="user.location" placeholder="Cemetery Location 1" />
+          <!-- <i class="material-icons md-36 align-middle mb-1 text-primary red">location_on</i> -->
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="cemeteryEdit" class="col-sm-4 col-form-label "> </label>
+
+        <div class="col-sm-8">
+          <button type="submit" class="btn btn-primary center-block auto" [disabled]="!userAddForm.valid"> Update </button>
+        </div>
+      </div>
+    </form>
+    <div class="alert text-center" [ngClass]="{'alert-success' : successMessage.status == true, 'alert-danger' : successMessage.status == false}"
+      style="text-align: center;" *ngIf="successMessage.message" [innerHtml]="successMessage.message"></div>
+  </div>
+
+</div>

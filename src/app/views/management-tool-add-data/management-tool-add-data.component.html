@@ -1,0 +1,70 @@
+<form [formGroup]="toolForm">
+    <div class="form-group row">
+        <label for="cemeteryOwenerArea" class="col-sm-4 col-form-label "> Assign cemetery(Area) </label>
+        <div class="col-sm-8">
+            <select style="height: 40px;" class="form-control col-md-12 selectCemeteryArea" (change)="cemeteryDataById()" name="cemeteryarea"
+                id="cemeteryarea" formControlName="cemeteryarea" [(ngModel)]='selectedValue'>
+                <option> Select Your Area </option>
+                <option *ngFor="let u of user" ngValue='{{u.id}}'>{{ u.name}}</option>
+            </select>
+        </div>
+    </div>
+</form>
+
+<div class="alert" [ngClass]="{'alert-success' : successMessage.status == true, 'alert-danger' : successMessage.status == false}" style="text-align: center;" *ngIf="successMessage.message" [innerHtml]="successMessage.message"></div>
+
+<file-uploader (onCompleteItem)="onCompleteItem($event)"></file-uploader>
+
+<div class="card">
+    <div class="loader" *ngIf="IsLoaderShow">
+        <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr class="bg-fade">
+                    <th>S. No.</th>
+                    <th>File Name </th>
+                    <th>URL</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor=" let imd of imploaddata; let i=index">
+                    <td class="align-middle">
+                        {{ i + 1}}
+                    </td>
+                    <td class="align-middle">
+                        <div>
+                            {{ imd.filename}}
+                        </div>
+                    </td>
+                    <td class="align-middle">
+
+                        <div>
+
+                            {{ imd.url}}
+                        </div>
+                    </td>
+                    <td class="align-middle">
+                        <div>
+                            {{ imd.status}}
+                        </div>
+                    </td>
+                    <td>
+
+                        <button (click)="importData(imd.cemeteryid,imd.filename,imd.url,imd.table_name)" [disabled]="!afterSelect || IsLoaderShow"
+                            *ngIf=" imd.filename.split('.')[1] == 'csv'">
+                            <i class="fa fa-2x fa-upload"></i>
+                        </button>
+
+                        <button (click)="userDelete(imd.id)" [disabled]="IsLoaderShow">
+                            <i class="fa fa-2x fa-trash"></i>
+                        </button>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+

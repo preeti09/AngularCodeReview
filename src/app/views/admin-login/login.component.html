@@ -1,0 +1,61 @@
+<div class="modal fade flat-popupform show" id="popup_login" style="display: block;">
+    <div class="modal-dialog form-listing">
+      <div class="modal-content">
+        <div class="modal-header login-head">
+        </div>
+        <div class="modal-body text-center clearfix">
+
+          <form [formGroup]="userAddForm" (ngSubmit)="adminLogin($event)">
+            <h3 class="title-formlogin">Login</h3>
+            <div class="form-group">
+              <label for="email"></label>
+              <div class="input-group input-group--inline">
+                <div class="input-group-addon">
+                  <i class="material-icons user-icon">account_circle</i>
+                </div>
+                <input type="text" class="form-control" name="email" id="email" formControlName="email" placeholder="email" ngModel="{{ emailcookie }}">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="password"></label>
+              <div class="input-group input-group--inline">
+                <div class="input-group-addon">
+                  <i class="material-icons">lock_outline</i>
+                </div>
+                <input type="password" class="form-control" name="password" id="password" formControlName="password" placeholder="password"
+                  ngModel="{{passwordcookie}}">
+              </div>
+            </div>
+            
+            <div class="flat-fogot clearfix">
+              <label class="checkbox pull-left" for="rememberPassword">
+                <input type="checkbox" name="remember" id="remember" class="checkBox control" (change)="isChecked(1)" [checked]="check" />
+                <label class="padd5 verticalTop" for="remember">Remember Me</label>
+              </label>
+              <label class="float-right link-register">
+                <span class="ml-auto">
+                  <a routerLink="/forgot-password">Forgot Password?</a>
+                </span>
+              </label>
+            </div>
+          
+            <div class="text-center">
+              <button class="login-btn effect-button" [disabled]="!userAddForm.valid">Login</button>
+            </div>
+            <div class="alert" [ngClass]="{'alert-success' : successMessage.status == 200, 'alert-danger' : successMessage.status == 500}"
+              style="text-align: center;" *ngIf="successMessage.message" [innerHtml]="successMessage.message"></div>
+          </form>
+        </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    'use strict';
+
+    // Self Initialize DOM Factory Components
+    domFactory.handler.autoInit();
+  });
+
+</script>

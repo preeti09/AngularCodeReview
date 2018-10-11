@@ -1,0 +1,67 @@
+#application: ezy-geospatial
+#version: 1
+runtime: php55
+api_version: 1
+threadsafe: yes
+
+#default_expiration: "30m"
+
+skip_files:
+- ^(?!dist)  # Skip any files not in the dist folder
+
+handlers:
+# Routing for bundles to serve directly
+
+- url: /favicon\.ico
+  static_files: favicon.ico
+  upload: favicon\.ico
+
+#- url: /((?:common|main|polyfills|styles|vendor|runtime|views-admin-login-login-module|views-cemeteries-cemeteries-module|views-cemetery-add-cemetery-add-module|views-cemetery-edit-cemetery-edit-module|views-cemetery-owner-add-cemetery-owner-add-module|views-cemetery-owner-edit-cemetery-owner-edit-module|views-cemetery-owners-cemetery-owners-module|views-dashboard-dashboard-module|views-home-home-module|views-management-tool-add-data-management-tool-add-data-module|views-map-map-module|views-show-cemetery-show-cemetery-module)\.js\.map)
+ # static_files: dist/australian_cemetery/\1
+  #upload: dist/australian_cemetery/.*  
+
+#- url: /((?:common|main|polyfills|styles|vendor|runtime|views-admin-login-login-module|views-cemeteries-cemeteries-module|views-cemetery-add-cemetery-add-module|views-cemetery-edit-cemetery-edit-module|views-cemetery-owner-add-cemetery-owner-add-module|views-cemetery-owner-edit-cemetery-owner-edit-module|views-cemetery-owners-cemetery-owners-module|views-dashboard-dashboard-module|views-home-home-module|views-management-tool-add-data-management-tool-add-data-module|views-map-map-module|views-show-cemetery-show-cemetery-module)\.js)
+ # static_files: dist/australian_cemetery/\1
+  #upload: dist/australian_cemetery/.*
+
+- url: /((?:common|main|polyfills|styles|vendor|runtime|views-(.+))\.js\.map)
+  static_files: dist/australian_cemetery/\1
+  upload: dist/australian_cemetery/.*  
+
+- url: /((?:common|main|polyfills|styles|vendor|runtime|views-(.+))\.js)
+  static_files: dist/australian_cemetery/\1
+  upload: dist/australian_cemetery/.*
+
+- url: /((?:MaterialIcons-Regular|summernote)\.(ttf|woff2|woff|eot))
+  static_files: dist/australian_cemetery/\1
+  upload: dist/australian_cemetery/.*
+
+- url: /((?:inline|main|polyfills|styles|vendor|runtime|views-home-home-module)\.[a-z0-9]+\.bundle\.js)
+ # secure: always
+  redirect_http_response_code: 301
+  static_files: dist/australian_cemetery/\1
+  upload: dist/australian_cemetery/.*
+
+# Routing for a prod styles.bundle.css to serve directly
+- url: /(styles\.[a-z0-9]+\.bundle\.css)
+  #secure: always
+  redirect_http_response_code: 301
+  static_files: dist/australian_cemetery/\1
+  upload: dist/australian_cemetery/.*
+
+# Routing for typedoc, assets and favicon.ico to serve directly
+- url: /((?:assets|docs)/.*|favicon\.ico)
+  #secure: always
+  redirect_http_response_code: 301
+  static_files: dist/australian_cemetery/\1
+  upload: dist/australian_cemetery/.*
+
+# Any other requests are routed to index.html for angular to handle so we don't need hash URLs
+- url: /.*
+  #secure: always
+  redirect_http_response_code: 301
+  static_files: dist/australian_cemetery/index.html
+  upload: dist/australian_cemetery/index\.html
+  #http_headers:
+    #Strict-Transport-Security: max-age=31536000; includeSubDomains
+    #X-Frame-Options: DENY

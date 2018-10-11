@@ -1,0 +1,85 @@
+<div class="mdk-drawer js-mdk-drawer" id="default-drawer" data-align="start" data-position="left" data-domfactory-upgraded="mdk-drawer" data-persistent="" data-opened=""><div class="mdk-drawer__scrim" style="" ></div>
+     <div class="mdk-drawer__content" style="" *ngIf="session">
+        <div class="mdk-drawer__inner" data-simplebar="" data-simplebar-force-enabled="true"><div class="simplebar-track vertical" style="visibility: hidden;"><div class="simplebar-scrollbar"></div></div><div class="simplebar-track horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar"></div></div><div class="simplebar-scroll-content" style="width: auto; height: auto;"><div class="simplebar-content">
+           <nav class="drawer  drawer--dark" >
+              <div class="drawer-spacer">
+                 <div class="media align-items-center">
+                    <a routerLink="/dashboard" class="drawer-brand-circle mr-2">A</a>
+                    <div class="media-body">
+                       <a routerLink="/dashboard" class="h5 m-0 text-link">Admin</a>
+                    </div>
+                 </div>
+              </div>
+              <!-- MENU -->
+              
+              <ul class="drawer-menu" id="dasboardMenu" data-children=".drawer-submenu">
+                <li class="drawer-menu-item ">
+                    <a  routerLink="/dashboard" [routerLinkActiveOptions]="{exact:true}" routerLinkActive="white-font">
+                     <img src="./assets/images/icons/cemetery-owner.png">
+                    <span class="drawer-menu-text">Dashboard</span>
+                    </a>
+                 </li>             
+                
+                 <li class="drawer-menu-item">
+                    <a routerLink="/cemeteries" [routerLinkActiveOptions]="{exact:true}" routerLinkActive="white-font">
+                    <img src="./assets/images/icons/cemeter-management-tool.png">
+                    <span class="drawer-menu-text">Cemetery</span>
+                    </a>
+                 </li>
+                 <li class="drawer-menu-item ">
+                            <a routerLink="/cemetery-owners" [routerLinkActiveOptions]="{exact:true}" routerLinkActive="white-font">
+                             <img src="./assets/images/icons/bookings.png">
+                            <span class="drawer-menu-text">Cemetery User</span>
+                            </a>
+               </li>
+                  
+                 <li class="drawer-menu-item">
+                    <a routerLink="/cemetery-management-tool" [routerLinkActiveOptions]="{exact:true}" routerLinkActive="white-font">
+                    <img src="./assets/images/icons/cemetery.png">
+                    <span class="drawer-menu-text">Import Data </span>
+                    </a>
+                 </li>
+                  <!-- <li class="drawer-menu-item">
+                         <a href="cemetery-users.php">
+                         <img src="./assets/images/icons/grave.png">
+                         <span class="drawer-menu-text">Cemetery User</span>
+                         </a>
+                      </li> -->
+                  <!-- <li class="drawer-menu-item  drawer-submenu">
+                    
+                             <a data-toggle="collapse" data-target="#uiComponentsMenu" aria-controls="uiComponentsMenu" aria-expanded="false" class="collapsed">
+                              <img src="./assets/images/icons/grave.png">
+                             <span class="drawer-menu-text"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Graves</font></font></span>
+                             </a>
+                          <ul class="collapse " id="uiComponentsMenu">
+                             <!-- <li class="drawer-menu-item "><a href="grave-allocation-admin.php">Allocation </a></li> -->
+                             <!-- <li class="drawer-menu-item "><a routerLink="/grave-allocation"> Allocate </a></li>
+                            
+                            
+                         </ul>
+                          </li>
+                      
+                      <li class="drawer-menu-item  drawer-submenu">
+                    
+                             <a data-toggle="collapse" href="cemetery-management-tool-admin.php" data-target="#map-ui" aria-controls="uiComponentsMenu" aria-expanded="false" class="collapsed">
+                              <img src="./assets/images/icons/cemeter-management-tool.png">
+                             <span class="drawer-menu-text">Management Tool </span>
+                             </a>
+                          <ul class="collapse " id="map-ui">
+                             <li class="drawer-menu-item "><a routerLink="/cemetery-management-tool">Add Data Files</a></li>
+                             <li class="drawer-menu-item "><a routerLink="map-data">Show Map Data</a></li>
+                            
+                         </ul>
+                          </li>
+                           -->
+                           <li class="drawer-menu-item">
+                            <a (click)="logOut()" href="javascript:void(0)" [routerLinkActiveOptions]="{exact:true}" routerLinkActive="white-font">
+                            <img src="./assets/images/icons/loginBy.png">
+                            <span class="drawer-menu-text">LogOut</span>
+                            </a>
+                         </li>
+              </ul>
+           </nav>
+        </div></div></div>
+     </div>
+  </div>

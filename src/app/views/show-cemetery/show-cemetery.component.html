@@ -1,0 +1,266 @@
+<div class="boxed">
+
+  <!-- Header -->
+  <header id="header" class="header clearfix">
+    <nav id="mainnav" class="navbar navbar-expand-md navbar-dark">
+      <div id="logo" class="logo float-left">
+        <a href="http://www.ezygeospatial.com.au/chronicle/">
+          <img src="../../../../assets/images/logo.png" alt="image">
+        </a>
+      </div>
+      <button class="navbar-toggler btn-menu" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav ml-auto">
+          <li *ngIf="userforName;">
+            <a href=""> Welcome: {{ userName }} </a>
+          </li>
+          <li *ngIf="logoutButton;else logout">
+            <a data-toggle="modal" href="#popup_login">
+              <i class="fa fa-sign-in"></i> Login</a>
+          </li>
+          <ng-template #logout>
+            <li>
+              <a href="" (click)="logoutSession()">
+                <i class="fa fa-sign-out"></i> Logout</a>
+            </li>
+          </ng-template>
+
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <div style="height: 70px; display: none;"></div>
+  <!-- /.header -->
+
+  <!-- /.header -->
+
+  <section class="listing-maps clearfix">
+    <div class="cemetery-name"><h3 class="text-center">{{ cemname }} </h3></div>
+    <div class="scroll-product reponsive">
+      <a class="FloatBtn">
+        <i class="fa fa-angle-right" aria-hidden="true"></i>
+      </a>
+      <div class="content mCustomScrollbar _mCS_1">
+        <div id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" style="max-height: none;" tabindex="0">
+          <div id="mCSB_1_container" class="mCSB_container" style="position:relative; top:0; left:0;" dir="ltr">
+            <div class="wrap-product clearfix">
+              <div class=" widget widget-form">
+
+                <form novalidate="" class="filter-form clearfix" #heroForm="ngForm" (ngSubmit)="clear()" id="filter-form" method="post" action="#">
+                  <div class="home-search">
+
+                    <div class="search-panel" autocomplete="off">
+                      <button type="button" class="btn btn-default dd dropdown-toggle" id="btnId">
+                        <span>Filter by {{rule.mode}}</span>
+                      </button>
+                    </div>
+
+                    <ul class="dropdown-menu ddown" role="menu" style="display: none;">
+                      <li>
+                        <label>
+                          <input type="radio" id="byPlotid" (change)="changePlaceholder();" [formControl]="checkParam" [(ngModel)]="rule.mode" value="Plot Id"
+                            name="optradio">Plot Id</label>
+                      </li>
+                      <li>
+                        <label>
+                          <input type="radio" id="byFirstname" (change)="changePlaceholder();" [formControl]="checkParam" value="First Name" [(ngModel)]="rule.mode"
+                            name="optradio">First Name</label>
+                      </li>
+                      <li>
+                        <label>
+                          <input type="radio" id="bySurname" (change)="changePlaceholder();" [formControl]="checkParam" name="optradio" value="Surname"
+                            [(ngModel)]="rule.mode">Surname</label>
+                      </li>
+                      <li>
+                        <label>
+                          <input type="radio" id="byDod" (change)="changePlaceholder();" [(ngModel)]="rule.mode" [formControl]="checkParam" value="Date of Death"
+                            name="optradio">Date of Death</label>
+                      </li>
+                      <li>
+                        <label>
+                          <input type="radio" id="byDob" [(ngModel)]="rule.mode" (change)="changePlaceholder();" [formControl]="checkParam" value="Date of Birth"
+                            name="optradio">Date of Birth</label>
+                      </li>
+                    </ul>
+                  </div>
+                  <mat-form-field class="example-full-width">
+                    <div class="input-group inputSearch">
+                      <span class="error" *ngIf="searchTooltip">*Please select search type</span>
+                      <input type="text" class="form-control" matInput [formControl]="searchTerm" id="search" placeholder="Eg. {{placeHolder}}">
+                      <!-- [matAutocomplete]="auto" -->
+                      <button>
+                        <i class="fa fa-search" (click)="clear();"></i>
+                      </button>
+                    </div>
+                    <div *ngIf="loaderBefore" class="loader-width">
+                      <img src='../../../../assets/images/loader1.gif' alt='loader' />
+                      <p>Loading...</p>
+                    </div>
+                  </mat-form-field>
+                
+                  <!-- <mat-autocomplete #auto="matAutocomplete">
+                    <ng-container *ngIf="!dropDownView">
+                      <mat-option *ngFor="let g of grave">
+                        <a *ngIf="type == 'plot_id'" (click)="clicked(g.plot_id,g.id)">{{g.plot_id}}</a>
+                        <a *ngIf="type == 'first_name'" (click)="clicked(g.plot_id,g.id)">{{g.first_name}}</a>
+                        <a *ngIf="type == 'surname'" (click)="clicked(g.plot_id,g.id)">{{g.surname}}</a>
+                        <a *ngIf="type == 'dod'" (click)="clicked(g.plot_id,g.id)">{{g.dod}}</a>
+                        <a *ngIf="type == 'dob'" (click)="clicked(g.plot_id,g.id)">{{g.dob}}</a>
+                      </mat-option>
+                    </ng-container>
+                  </mat-autocomplete> -->
+
+                  <ng-container *ngIf="dropDownView">
+                    <div class="mt-20 mb-20">
+                      <div class="text-center no-data" *ngIf="grave.length == 0 && !loaderBefore; ">
+                        <h6>No Data Available</h6>
+                      </div>
+                      <div class="flat-product" *ngFor="let g of grave">
+                        <a (click)="clicked(g.plot_id,g.id)">
+                          <div class="content-product">
+                            <div class="text">
+                              <p>Section: {{g.plot_id}}</p>
+                              <p>Name: {{g.title}} {{g.first_name}} {{g.middle_name}} {{g.surname}}</p>
+                              <p>Date of Birth: {{g.dob}}</p>
+                              <p>Date of Death: {{g.dod}}</p>
+                              <a (click)="clicked(g.plot_id,g.id)">
+                                <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+                              </a>
+                            </div>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="blog-pagination style2 text-center">
+                      <ul *ngIf="pager.pages && pager.pages.length" class="pagination">
+                        <!-- <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                            <a (click)="setPage(1)">First</a>
+                                        </li> -->
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                          <a (click)="setPage(pager.currentPage - 1,'')">
+                            <</a>
+                        </li>
+                        <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                          <a (click)="setPage(page,'')">{{page}}</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                          <a (click)="setPage(pager.currentPage + 1,'')">></a>
+                        </li>
+                        <!-- <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                            <a (click)="setPage(pager.totalPages)">Last</a>
+                                        </li> -->
+                      </ul>
+                    </div>
+                  </ng-container>
+                </form>
+
+              </div>
+              <div class="show-item clearfix">
+
+              </div>
+            </div>
+          </div>
+          <div id="mCSB_1_scrollbar_vertical" class="mCSB_scrollTools mCSB_1_scrollbar mCS-light mCSB_scrollTools_vertical" style="display: block;">
+            <div class="mCSB_draggerContainer">
+              <div id="mCSB_1_dragger_vertical" class="mCSB_dragger" style="position: absolute; min-height: 30px; display: block; height: 394px; max-height: 858px; top: 0px;">
+                <div class="mCSB_dragger_bar" style="line-height: 30px;"></div>
+              </div>
+              <div class="mCSB_draggerRail"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 reponsive">
+      <div id="mapid" class="row"></div>
+      <div id='loader'>
+        <img src='../../../../assets/images/loader1.gif' alt='loader' />
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <!-- Footer -->
+  <footer class="footer footer-widgets">
+    <div class="copyright">
+      <p>Copyright © 2018. Ezy Geospatial. All Rights Reserved.
+      </p>
+    </div>
+  </footer>
+
+
+
+</div>
+<div class="modal fade flat-popupform" id="popup_login">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header login-head">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+      <div class="modal-body text-center clearfix">
+        <form class="form-login form-listing" action="#" method="post">
+          <!-- <h4 class="cemetery-name">Cemetery Name</h4> -->
+          <h3 class="title-formlogin">Administrator Login</h3>
+          <span class="input-login icon-form">
+            <input type="text" [(ngModel)]="loginDetails.email" placeholder="Username*" value="{{emailcookie}}" name="email" required="required">
+            <i class="fa fa-user"></i>
+          </span>
+
+          <span class="input-login icon-form">
+            <input type="password" [(ngModel)]="loginDetails.password" placeholder="Password*" value="{{passwordcookie}}" name="password"
+              required="required">
+            <i class="fa fa-lock"></i>
+          </span>
+
+          <div class="flat-fogot clearfix">
+            <label class="checkbox" for="rememberPassword">
+              <input type="checkbox" name="remember" [(ngModel)]="loginDetails.remember" id="remember" class="checkBox control" />
+              <label for="remember" class="padd5 verticalTop form-">Remember Me</label>
+            </label>
+            <label class="float-right link-register">
+              <span class="ml-auto">
+                <a data-toggle="modal" href="#lostPassword">
+                  Lost your Password ? </a>
+              </span>
+            </label>
+          </div>
+          <span class="wrap-button">
+            <button type="button" id="login-button" (click)="doLogin(loginDetails)" class="login-btn effect-button" title="log in">LOGIN</button>
+          </span>
+          <div class="alert" [ngClass]="{'alert-success' : action.status, 'alert-danger' : !action.status}" style="text-align: center;"
+            *ngIf="action !== undefined && action.msg" [innerHtml]="action.msg"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade flat-popupform" id="lostPassword">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header login-head">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+      <div class="modal-body text-center clearfix">
+        <form class="form-login form-listing" #forgotForm="ngForm" action="#" method="post">
+          <h3 class="title-formlogin">Reset Password</h3>
+          <span class="input-login icon-form">
+            <input type="text" #emailAdd="ngModel" [(ngModel)]="forgot.email" placeholder="Enter Email*" id="email" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+              name="email" required>
+          </span>
+          <div class="alert alert-danger" *ngIf="emailAdd.invalid">This field is required and must be valid
+          </div>
+          <span class="wrap-button">
+            <button type="button" id="forgot_button" [disabled]="!forgotForm.valid" (click)="forgetFun(forgot)" class="login-btn effect-button"
+              title="log in">Submit</button>
+            <button type="button" class="login-btn black-btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+          </span>
+          <div class="alert" [ngClass]="{'alert-success' : successMessage.status == 200, 'alert-danger' : successMessage.status == 500}"
+            style="text-align: center;" *ngIf="successMessage.message" [innerHtml]="successMessage.message"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
